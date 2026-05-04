@@ -1,204 +1,187 @@
-<svg viewBox="0 0 1100 1000" xmlns="http://www.w3.org/2000/svg" role="img" style="font-family: system-ui, -apple-system, sans-serif;">
+<svg viewBox="0 0 1200 1100" xmlns="http://www.w3.org/2000/svg" role="img" style="font-family: system-ui, -apple-system, sans-serif;">
   <title>sevaai-sdlc reference architecture</title>
-  <desc>Flow diagram showing how a user trigger routes through Claude's skill resolution into either the orchestrator or a single stage, the runtime tools each stage uses (Glob, Read, Grep, LLM, Write, optional MCP), the output dossier, and the real-world products each of the 7 stages hands off to.</desc>
+  <desc>High-contrast light-mode diagram showing the sevaai-sdlc flow: user trigger -> Claude skill resolution -> orchestrator or single-stage skill -> stage runner using Glob/Read/Grep/LLM/MCP/Write -> dossier output -> hand-off to real-world products at each of the 7 SDLC stages.</desc>
 
   <defs>
-    <marker id="arrow" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="8" markerHeight="6" orient="auto">
-      <path d="M0,0 L10,3.5 L0,7z" fill="#94a3b8"/>
+    <marker id="arrow" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="9" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,3.5 L0,7z" fill="#475569"/>
     </marker>
-    <marker id="arrow-indigo" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="8" markerHeight="6" orient="auto">
-      <path d="M0,0 L10,3.5 L0,7z" fill="#6366f1"/>
+    <marker id="arrow-indigo" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="9" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,3.5 L0,7z" fill="#4f46e5"/>
     </marker>
   </defs>
 
-  <!-- Background -->
-  <rect width="1100" height="1000" fill="var(--bg-color, #0f172a)" opacity="0.5"/>
+  <!-- Solid light background for consistent contrast -->
+  <rect width="1200" height="1100" fill="#f8fafc"/>
 
   <!-- Title -->
-  <text x="550" y="32" text-anchor="middle" fill="var(--text-color, #f1f5f9)" font-size="19" font-weight="700">sevaai-sdlc — Reference Architecture</text>
-  <text x="550" y="52" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="11">Flow + tools used at each stage</text>
+  <text x="600" y="40" text-anchor="middle" fill="#0f172a" font-size="24" font-weight="800">sevaai-sdlc — Reference Architecture</text>
+  <text x="600" y="64" text-anchor="middle" fill="#475569" font-size="14">Flow and tools used at each SDLC stage</text>
 
   <!-- ===== Row 1: Entry points ===== -->
-  <text x="60" y="86" fill="var(--text-color-secondary, #94a3b8)" font-size="10" font-weight="700" letter-spacing="0.05em">USER ENTRY</text>
+  <text x="60" y="105" fill="#475569" font-size="13" font-weight="700" letter-spacing="0.08em">USER ENTRY</text>
 
-  <rect x="60" y="95" width="280" height="52" rx="8" fill="rgba(99,102,241,0.14)" stroke="#6366f1" stroke-width="1.4"/>
-  <text x="200" y="118" text-anchor="middle" fill="#a5b4fc" font-size="12" font-weight="700">Slash command</text>
-  <text x="200" y="135" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="10" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">/sdlc Add OAuth signup</text>
+  <rect x="60" y="115" width="345" height="60" rx="10" fill="#e0e7ff" stroke="#4f46e5" stroke-width="1.8"/>
+  <text x="232" y="140" text-anchor="middle" fill="#312e81" font-size="15" font-weight="700">Slash command</text>
+  <text x="232" y="160" text-anchor="middle" fill="#475569" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">/sdlc Add OAuth signup</text>
 
-  <rect x="410" y="95" width="280" height="52" rx="8" fill="rgba(99,102,241,0.14)" stroke="#6366f1" stroke-width="1.4"/>
-  <text x="550" y="118" text-anchor="middle" fill="#a5b4fc" font-size="12" font-weight="700">Natural language — full pipeline</text>
-  <text x="550" y="135" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="10">"Run the full SDLC for OAuth signup"</text>
+  <rect x="427" y="115" width="345" height="60" rx="10" fill="#e0e7ff" stroke="#4f46e5" stroke-width="1.8"/>
+  <text x="600" y="140" text-anchor="middle" fill="#312e81" font-size="15" font-weight="700">NL — full pipeline</text>
+  <text x="600" y="160" text-anchor="middle" fill="#475569" font-size="12">"Run the full SDLC for OAuth signup"</text>
 
-  <rect x="760" y="95" width="280" height="52" rx="8" fill="rgba(99,102,241,0.14)" stroke="#6366f1" stroke-width="1.4"/>
-  <text x="900" y="118" text-anchor="middle" fill="#a5b4fc" font-size="12" font-weight="700">Natural language — single stage</text>
-  <text x="900" y="135" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="10">"Generate a threat model for ..."</text>
+  <rect x="794" y="115" width="345" height="60" rx="10" fill="#e0e7ff" stroke="#4f46e5" stroke-width="1.8"/>
+  <text x="967" y="140" text-anchor="middle" fill="#312e81" font-size="15" font-weight="700">NL — single stage</text>
+  <text x="967" y="160" text-anchor="middle" fill="#475569" font-size="12">"Generate a threat model for ..."</text>
 
-  <line x1="200" y1="147" x2="350" y2="180" stroke="#6366f1" stroke-width="1.4" marker-end="url(#arrow-indigo)"/>
-  <line x1="550" y1="147" x2="450" y2="180" stroke="#6366f1" stroke-width="1.4" marker-end="url(#arrow-indigo)"/>
-  <line x1="900" y1="147" x2="700" y2="180" stroke="#6366f1" stroke-width="1.4" marker-end="url(#arrow-indigo)"/>
+  <line x1="232" y1="175" x2="500" y2="210" stroke="#4f46e5" stroke-width="1.6" marker-end="url(#arrow-indigo)"/>
+  <line x1="600" y1="175" x2="600" y2="210" stroke="#4f46e5" stroke-width="1.6" marker-end="url(#arrow-indigo)"/>
+  <line x1="967" y1="175" x2="700" y2="210" stroke="#4f46e5" stroke-width="1.6" marker-end="url(#arrow-indigo)"/>
 
   <!-- ===== Row 2: Skill Resolution ===== -->
-  <rect x="350" y="180" width="400" height="52" rx="8" fill="rgba(99,102,241,0.20)" stroke="#6366f1" stroke-width="1.7"/>
-  <text x="550" y="203" text-anchor="middle" fill="#c7d2fe" font-size="13" font-weight="700">Skill Resolution (Claude)</text>
-  <text x="550" y="220" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="10">matches trigger phrase against SKILL.md frontmatter `description`</text>
+  <rect x="380" y="210" width="440" height="64" rx="10" fill="#c7d2fe" stroke="#4f46e5" stroke-width="2"/>
+  <text x="600" y="237" text-anchor="middle" fill="#1e1b4b" font-size="16" font-weight="800">Skill Resolution (Claude)</text>
+  <text x="600" y="258" text-anchor="middle" fill="#312e81" font-size="12">matches trigger phrase against SKILL.md frontmatter <tspan font-family="ui-monospace, monospace">description</tspan></text>
 
-  <line x1="450" y1="232" x2="280" y2="280" stroke="#6366f1" stroke-width="1.4" marker-end="url(#arrow-indigo)"/>
-  <line x1="650" y1="232" x2="820" y2="280" stroke="#6366f1" stroke-width="1.4" marker-end="url(#arrow-indigo)"/>
+  <line x1="490" y1="274" x2="320" y2="320" stroke="#4f46e5" stroke-width="1.6" marker-end="url(#arrow-indigo)"/>
+  <line x1="710" y1="274" x2="880" y2="320" stroke="#4f46e5" stroke-width="1.6" marker-end="url(#arrow-indigo)"/>
 
   <!-- ===== Row 3: Orchestrator vs Single Stage ===== -->
-  <rect x="60" y="280" width="440" height="84" rx="8" fill="rgba(139,92,246,0.12)" stroke="#8b5cf6" stroke-width="1.4"/>
-  <text x="280" y="306" text-anchor="middle" fill="#c4b5fd" font-size="13" font-weight="700">sdlc-orchestrator skill</text>
-  <text x="280" y="326" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="10">reads .sevaai-sdlc.yaml &#183; creates dossier folder</text>
-  <text x="280" y="342" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="10">writes 00-index.md &#183; runs stages 1-&gt;7 in order</text>
-  <text x="280" y="358" text-anchor="middle" fill="#fda4af" font-size="10" font-style="italic">halts pipeline if Security marks BLOCKING</text>
+  <rect x="60" y="320" width="500" height="100" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.8"/>
+  <text x="310" y="348" text-anchor="middle" fill="#4c1d95" font-size="16" font-weight="800">sdlc-orchestrator skill</text>
+  <text x="310" y="370" text-anchor="middle" fill="#1e293b" font-size="13">reads .sevaai-sdlc.yaml &#183; creates dossier folder</text>
+  <text x="310" y="388" text-anchor="middle" fill="#1e293b" font-size="13">writes 00-index.md &#183; runs stages 1-&gt;7 in order</text>
+  <text x="310" y="408" text-anchor="middle" fill="#be123c" font-size="13" font-weight="600">halts pipeline if Security marks BLOCKING</text>
 
-  <rect x="600" y="280" width="440" height="84" rx="8" fill="rgba(16,185,129,0.10)" stroke="#10b981" stroke-width="1.4"/>
-  <text x="820" y="306" text-anchor="middle" fill="#6ee7b7" font-size="13" font-weight="700">Single stage skill</text>
-  <text x="820" y="326" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="10">e.g., sdlc-security, sdlc-testing</text>
-  <text x="820" y="342" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="10">runs only that stage's logic</text>
-  <text x="820" y="358" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="10" font-style="italic">writes its single artifact</text>
+  <rect x="640" y="320" width="500" height="100" rx="10" fill="#d1fae5" stroke="#059669" stroke-width="1.8"/>
+  <text x="890" y="348" text-anchor="middle" fill="#064e3b" font-size="16" font-weight="800">Single stage skill</text>
+  <text x="890" y="370" text-anchor="middle" fill="#1e293b" font-size="13">e.g., sdlc-security, sdlc-testing</text>
+  <text x="890" y="388" text-anchor="middle" fill="#1e293b" font-size="13">runs only that stage's logic</text>
+  <text x="890" y="408" text-anchor="middle" fill="#475569" font-size="13" font-style="italic">writes its single artifact</text>
 
-  <line x1="280" y1="364" x2="450" y2="402" stroke="#94a3b8" stroke-width="1" marker-end="url(#arrow)"/>
-  <line x1="820" y1="364" x2="650" y2="402" stroke="#94a3b8" stroke-width="1" marker-end="url(#arrow)"/>
+  <line x1="310" y1="420" x2="500" y2="466" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <line x1="890" y1="420" x2="700" y2="466" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
 
   <!-- ===== Row 4: Stage Runner ===== -->
-  <rect x="100" y="400" width="900" height="172" rx="10" fill="rgba(99,102,241,0.06)" stroke="#6366f1" stroke-width="1.2" stroke-dasharray="6,3"/>
-  <text x="550" y="425" text-anchor="middle" fill="#c7d2fe" font-size="13" font-weight="700">Stage Runner — the same engine runs every stage</text>
-  <text x="550" y="442" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="10">SKILL.md provides instructions &#183; templates/artifact.md provides skeleton &#183; the LLM does synthesis</text>
+  <rect x="60" y="468" width="1080" height="220" rx="14" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6" stroke-dasharray="8,4"/>
+  <text x="600" y="497" text-anchor="middle" fill="#1e1b4b" font-size="17" font-weight="800">Stage Runner — same engine for every stage</text>
+  <text x="600" y="518" text-anchor="middle" fill="#475569" font-size="13">SKILL.md = instructions &#183; templates/artifact.md = skeleton &#183; LLM = synthesis</text>
 
-  <g font-family="system-ui">
-    <rect x="125" y="465" width="135" height="82" rx="6" fill="rgba(99,102,241,0.16)" stroke="#6366f1" stroke-width="1.2"/>
-    <text x="192" y="487" text-anchor="middle" fill="#a5b4fc" font-size="11" font-weight="700">Glob</text>
-    <text x="192" y="503" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">discover files</text>
-    <text x="192" y="518" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="8" font-family="ui-monospace, monospace">README*</text>
-    <text x="192" y="530" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="8" font-family="ui-monospace, monospace">docs/**/*.md</text>
-    <text x="192" y="542" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="8" font-family="ui-monospace, monospace">src/**</text>
+  <g>
+    <rect x="90" y="540" width="170" height="120" rx="8" fill="#ffffff" stroke="#4f46e5" stroke-width="1.6"/>
+    <text x="175" y="568" text-anchor="middle" fill="#312e81" font-size="16" font-weight="800">Glob</text>
+    <text x="175" y="592" text-anchor="middle" fill="#1e293b" font-size="13" font-weight="600">discover files</text>
+    <text x="175" y="614" text-anchor="middle" fill="#475569" font-size="11" font-family="ui-monospace, monospace">README*</text>
+    <text x="175" y="630" text-anchor="middle" fill="#475569" font-size="11" font-family="ui-monospace, monospace">docs/**/*.md</text>
+    <text x="175" y="646" text-anchor="middle" fill="#475569" font-size="11" font-family="ui-monospace, monospace">src/**</text>
 
-    <rect x="270" y="465" width="135" height="82" rx="6" fill="rgba(99,102,241,0.16)" stroke="#6366f1" stroke-width="1.2"/>
-    <text x="337" y="487" text-anchor="middle" fill="#a5b4fc" font-size="11" font-weight="700">Read</text>
-    <text x="337" y="503" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">open files</text>
-    <text x="337" y="518" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="8">README, ADRs,</text>
-    <text x="337" y="530" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="8">prior dossier</text>
-    <text x="337" y="542" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="8">artifacts</text>
+    <rect x="275" y="540" width="170" height="120" rx="8" fill="#ffffff" stroke="#4f46e5" stroke-width="1.6"/>
+    <text x="360" y="568" text-anchor="middle" fill="#312e81" font-size="16" font-weight="800">Read</text>
+    <text x="360" y="592" text-anchor="middle" fill="#1e293b" font-size="13" font-weight="600">open files</text>
+    <text x="360" y="614" text-anchor="middle" fill="#475569" font-size="12">README, ADRs,</text>
+    <text x="360" y="630" text-anchor="middle" fill="#475569" font-size="12">prior dossier</text>
+    <text x="360" y="646" text-anchor="middle" fill="#475569" font-size="12">artifacts</text>
 
-    <rect x="415" y="465" width="135" height="82" rx="6" fill="rgba(99,102,241,0.16)" stroke="#6366f1" stroke-width="1.2"/>
-    <text x="482" y="487" text-anchor="middle" fill="#a5b4fc" font-size="11" font-weight="700">Grep</text>
-    <text x="482" y="503" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">search code</text>
-    <text x="482" y="518" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="8">find auth, api</text>
-    <text x="482" y="530" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="8">handlers, db</text>
-    <text x="482" y="542" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="8">migrations</text>
+    <rect x="460" y="540" width="170" height="120" rx="8" fill="#ffffff" stroke="#4f46e5" stroke-width="1.6"/>
+    <text x="545" y="568" text-anchor="middle" fill="#312e81" font-size="16" font-weight="800">Grep</text>
+    <text x="545" y="592" text-anchor="middle" fill="#1e293b" font-size="13" font-weight="600">search code</text>
+    <text x="545" y="614" text-anchor="middle" fill="#475569" font-size="12">find auth, api</text>
+    <text x="545" y="630" text-anchor="middle" fill="#475569" font-size="12">handlers, db</text>
+    <text x="545" y="646" text-anchor="middle" fill="#475569" font-size="12">migrations</text>
 
-    <rect x="560" y="465" width="135" height="82" rx="6" fill="rgba(139,92,246,0.20)" stroke="#8b5cf6" stroke-width="1.5"/>
-    <text x="627" y="487" text-anchor="middle" fill="#c4b5fd" font-size="11" font-weight="700">LLM call</text>
-    <text x="627" y="503" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">synthesis</text>
-    <text x="627" y="518" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="8">tier per stage:</text>
-    <text x="627" y="530" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="8">fast / balanced /</text>
-    <text x="627" y="542" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="8">deep</text>
+    <rect x="645" y="540" width="170" height="120" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+    <text x="730" y="568" text-anchor="middle" fill="#4c1d95" font-size="16" font-weight="800">LLM call</text>
+    <text x="730" y="592" text-anchor="middle" fill="#1e293b" font-size="13" font-weight="600">synthesis</text>
+    <text x="730" y="614" text-anchor="middle" fill="#475569" font-size="12">tier per stage:</text>
+    <text x="730" y="630" text-anchor="middle" fill="#475569" font-size="12">fast / balanced /</text>
+    <text x="730" y="646" text-anchor="middle" fill="#475569" font-size="12">deep</text>
 
-    <rect x="705" y="465" width="135" height="82" rx="6" fill="rgba(16,185,129,0.16)" stroke="#10b981" stroke-width="1.2"/>
-    <text x="772" y="487" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="700">MCP (optional)</text>
-    <text x="772" y="503" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">live data</text>
-    <text x="772" y="518" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="8">Jira, Linear,</text>
-    <text x="772" y="530" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="8">GitHub, Datadog</text>
-    <text x="772" y="542" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="8">if connected</text>
+    <rect x="830" y="540" width="170" height="120" rx="8" fill="#d1fae5" stroke="#059669" stroke-width="1.6"/>
+    <text x="915" y="568" text-anchor="middle" fill="#064e3b" font-size="16" font-weight="800">MCP</text>
+    <text x="915" y="592" text-anchor="middle" fill="#1e293b" font-size="13" font-weight="600">live data (optional)</text>
+    <text x="915" y="614" text-anchor="middle" fill="#475569" font-size="12">Jira, Linear,</text>
+    <text x="915" y="630" text-anchor="middle" fill="#475569" font-size="12">GitHub, Datadog</text>
+    <text x="915" y="646" text-anchor="middle" fill="#475569" font-size="12">if connected</text>
 
-    <rect x="850" y="465" width="135" height="82" rx="6" fill="rgba(99,102,241,0.16)" stroke="#6366f1" stroke-width="1.2"/>
-    <text x="917" y="487" text-anchor="middle" fill="#a5b4fc" font-size="11" font-weight="700">Write</text>
-    <text x="917" y="503" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">save artifact</text>
-    <text x="917" y="518" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="8">.sevaai-sdlc/</text>
-    <text x="917" y="530" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="8">{slug}/</text>
-    <text x="917" y="542" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="8">0N-stage.md</text>
+    <rect x="1015" y="540" width="115" height="120" rx="8" fill="#ffffff" stroke="#4f46e5" stroke-width="1.6"/>
+    <text x="1072" y="568" text-anchor="middle" fill="#312e81" font-size="16" font-weight="800">Write</text>
+    <text x="1072" y="592" text-anchor="middle" fill="#1e293b" font-size="13" font-weight="600">save artifact</text>
+    <text x="1072" y="616" text-anchor="middle" fill="#475569" font-size="11" font-family="ui-monospace, monospace">.sevaai-sdlc/</text>
+    <text x="1072" y="632" text-anchor="middle" fill="#475569" font-size="11" font-family="ui-monospace, monospace">{slug}/</text>
+    <text x="1072" y="648" text-anchor="middle" fill="#475569" font-size="11" font-family="ui-monospace, monospace">0N-stage.md</text>
   </g>
 
-  <line x1="550" y1="572" x2="550" y2="610" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <line x1="600" y1="688" x2="600" y2="730" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow)"/>
 
   <!-- ===== Row 5: Output dossier ===== -->
-  <rect x="280" y="610" width="540" height="100" rx="10" fill="rgba(245,158,11,0.12)" stroke="#f59e0b" stroke-width="1.5"/>
-  <text x="550" y="634" text-anchor="middle" fill="#fcd34d" font-size="13" font-weight="700">Feature dossier</text>
-  <text x="550" y="652" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="10" font-family="ui-monospace, monospace">.sevaai-sdlc/{feature-slug}/</text>
-  <text x="305" y="675" fill="var(--text-color-secondary, #94a3b8)" font-size="9" font-family="ui-monospace, monospace">00-index.md  &#183;  01-requirements.md  &#183;  02-design.md  &#183;  03-development.md</text>
-  <text x="305" y="690" fill="var(--text-color-secondary, #94a3b8)" font-size="9" font-family="ui-monospace, monospace">04-testing.md  &#183;  05-security.md  &#183;  06-deployment.md  &#183;  07-maintenance.md</text>
+  <rect x="240" y="730" width="720" height="110" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="600" y="760" text-anchor="middle" fill="#78350f" font-size="17" font-weight="800">Feature dossier</text>
+  <text x="600" y="782" text-anchor="middle" fill="#1e293b" font-size="13" font-family="ui-monospace, monospace">.sevaai-sdlc/{feature-slug}/</text>
+  <text x="600" y="806" text-anchor="middle" fill="#475569" font-size="12" font-family="ui-monospace, monospace">00-index &#183; 01-requirements &#183; 02-design &#183; 03-development</text>
+  <text x="600" y="824" text-anchor="middle" fill="#475569" font-size="12" font-family="ui-monospace, monospace">04-testing &#183; 05-security &#183; 06-deployment &#183; 07-maintenance</text>
 
-  <line x1="550" y1="710" x2="550" y2="745" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <line x1="600" y1="840" x2="600" y2="880" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow)"/>
 
   <!-- ===== Row 6: Hand-off ===== -->
-  <text x="60" y="765" fill="var(--text-color-secondary, #94a3b8)" font-size="10" font-weight="700" letter-spacing="0.05em">HAND-OFF — each stage's artifact ships into your real toolchain</text>
+  <text x="60" y="900" fill="#475569" font-size="13" font-weight="700" letter-spacing="0.08em">HAND-OFF — each artifact ships into your real toolchain</text>
 
-  <g font-family="system-ui">
-    <rect x="60" y="780" width="138" height="180" rx="6" fill="rgba(16,185,129,0.10)" stroke="#10b981" stroke-width="1.2"/>
-    <text x="129" y="800" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="700">1. Requirements</text>
-    <text x="129" y="822" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Jira</text>
-    <text x="129" y="836" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Linear</text>
-    <text x="129" y="850" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Notion</text>
-    <text x="129" y="864" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Productboard</text>
-    <text x="129" y="878" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Dovetail</text>
-    <text x="129" y="892" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Atlassian Intel.</text>
+  <g>
+    <rect x="60" y="912" width="155" height="160" rx="10" fill="#d1fae5" stroke="#059669" stroke-width="1.6"/>
+    <text x="137" y="938" text-anchor="middle" fill="#064e3b" font-size="14" font-weight="800">1. Requirements</text>
+    <text x="137" y="966" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600">Jira</text>
+    <text x="137" y="987" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600">Linear</text>
+    <text x="137" y="1008" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600">Notion</text>
+    <text x="137" y="1029" text-anchor="middle" fill="#475569" font-size="11">Productboard</text>
+    <text x="137" y="1048" text-anchor="middle" fill="#475569" font-size="11">Atlassian Intel.</text>
 
-    <rect x="206" y="780" width="138" height="180" rx="6" fill="rgba(16,185,129,0.10)" stroke="#10b981" stroke-width="1.2"/>
-    <text x="275" y="800" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="700">2. Design</text>
-    <text x="275" y="822" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Eraser AI</text>
-    <text x="275" y="836" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Excalidraw</text>
-    <text x="275" y="850" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Backstage</text>
-    <text x="275" y="864" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">IriusRisk</text>
-    <text x="275" y="878" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Stoplight</text>
-    <text x="275" y="892" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">SwaggerHub</text>
+    <rect x="225" y="912" width="155" height="160" rx="10" fill="#d1fae5" stroke="#059669" stroke-width="1.6"/>
+    <text x="302" y="938" text-anchor="middle" fill="#064e3b" font-size="14" font-weight="800">2. Design</text>
+    <text x="302" y="966" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600">Eraser AI</text>
+    <text x="302" y="987" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600">Backstage</text>
+    <text x="302" y="1008" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600">IriusRisk</text>
+    <text x="302" y="1029" text-anchor="middle" fill="#475569" font-size="11">Stoplight</text>
+    <text x="302" y="1048" text-anchor="middle" fill="#475569" font-size="11">SwaggerHub</text>
 
-    <rect x="352" y="780" width="138" height="180" rx="6" fill="rgba(16,185,129,0.10)" stroke="#10b981" stroke-width="1.2"/>
-    <text x="421" y="800" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="700">3. Development</text>
-    <text x="421" y="822" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Cursor</text>
-    <text x="421" y="836" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Claude Code</text>
-    <text x="421" y="850" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">GitHub Copilot</text>
-    <text x="421" y="864" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Windsurf</text>
-    <text x="421" y="878" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">CodeRabbit</text>
-    <text x="421" y="892" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Greptile</text>
+    <rect x="390" y="912" width="155" height="160" rx="10" fill="#d1fae5" stroke="#059669" stroke-width="1.6"/>
+    <text x="467" y="938" text-anchor="middle" fill="#064e3b" font-size="14" font-weight="800">3. Development</text>
+    <text x="467" y="966" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600">Cursor</text>
+    <text x="467" y="987" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600">Claude Code</text>
+    <text x="467" y="1008" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600">GitHub Copilot</text>
+    <text x="467" y="1029" text-anchor="middle" fill="#475569" font-size="11">CodeRabbit</text>
+    <text x="467" y="1048" text-anchor="middle" fill="#475569" font-size="11">Greptile</text>
 
-    <rect x="498" y="780" width="138" height="180" rx="6" fill="rgba(16,185,129,0.10)" stroke="#10b981" stroke-width="1.2"/>
-    <text x="567" y="800" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="700">4. Testing</text>
-    <text x="567" y="822" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Diffblue</text>
-    <text x="567" y="836" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Qodo / CodiumAI</text>
-    <text x="567" y="850" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Mabl</text>
-    <text x="567" y="864" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Testim</text>
-    <text x="567" y="878" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Applitools</text>
-    <text x="567" y="892" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Keploy</text>
+    <rect x="555" y="912" width="155" height="160" rx="10" fill="#d1fae5" stroke="#059669" stroke-width="1.6"/>
+    <text x="632" y="938" text-anchor="middle" fill="#064e3b" font-size="14" font-weight="800">4. Testing</text>
+    <text x="632" y="966" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600">Mabl</text>
+    <text x="632" y="987" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600">Diffblue</text>
+    <text x="632" y="1008" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600">Applitools</text>
+    <text x="632" y="1029" text-anchor="middle" fill="#475569" font-size="11">Qodo</text>
+    <text x="632" y="1048" text-anchor="middle" fill="#475569" font-size="11">Keploy</text>
 
-    <rect x="644" y="780" width="138" height="180" rx="6" fill="rgba(244,63,94,0.12)" stroke="#f43f5e" stroke-width="1.4"/>
-    <text x="713" y="800" text-anchor="middle" fill="#fda4af" font-size="11" font-weight="700">5. Security</text>
-    <text x="713" y="822" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Snyk</text>
-    <text x="713" y="836" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Semgrep AI</text>
-    <text x="713" y="850" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">IriusRisk</text>
-    <text x="713" y="864" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">GitGuardian</text>
-    <text x="713" y="878" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Trivy / Wiz</text>
-    <text x="713" y="892" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Lakera</text>
+    <rect x="720" y="912" width="155" height="160" rx="10" fill="#ffe4e6" stroke="#e11d48" stroke-width="2"/>
+    <text x="797" y="938" text-anchor="middle" fill="#881337" font-size="14" font-weight="800">5. Security</text>
+    <text x="797" y="966" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600">Snyk</text>
+    <text x="797" y="987" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600">Semgrep AI</text>
+    <text x="797" y="1008" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600">IriusRisk</text>
+    <text x="797" y="1029" text-anchor="middle" fill="#475569" font-size="11">GitGuardian</text>
+    <text x="797" y="1048" text-anchor="middle" fill="#475569" font-size="11">Trivy / Wiz</text>
 
-    <rect x="790" y="780" width="138" height="180" rx="6" fill="rgba(16,185,129,0.10)" stroke="#10b981" stroke-width="1.2"/>
-    <text x="859" y="800" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="700">6. Deployment</text>
-    <text x="859" y="822" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Harness</text>
-    <text x="859" y="836" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">LaunchDarkly</text>
-    <text x="859" y="850" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Argo Rollouts</text>
-    <text x="859" y="864" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Pulumi AI</text>
-    <text x="859" y="878" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">GitHub Actions</text>
-    <text x="859" y="892" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Flagger</text>
+    <rect x="885" y="912" width="155" height="160" rx="10" fill="#d1fae5" stroke="#059669" stroke-width="1.6"/>
+    <text x="962" y="938" text-anchor="middle" fill="#064e3b" font-size="14" font-weight="800">6. Deployment</text>
+    <text x="962" y="966" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600">Harness</text>
+    <text x="962" y="987" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600">LaunchDarkly</text>
+    <text x="962" y="1008" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600">Argo Rollouts</text>
+    <text x="962" y="1029" text-anchor="middle" fill="#475569" font-size="11">Pulumi AI</text>
+    <text x="962" y="1048" text-anchor="middle" fill="#475569" font-size="11">Flagger</text>
 
-    <rect x="936" y="780" width="138" height="180" rx="6" fill="rgba(16,185,129,0.10)" stroke="#10b981" stroke-width="1.2"/>
-    <text x="1005" y="800" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="700">7. Maintenance</text>
-    <text x="1005" y="822" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Datadog Bits</text>
-    <text x="1005" y="836" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">PagerDuty</text>
-    <text x="1005" y="850" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">DevOps Guru</text>
-    <text x="1005" y="864" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">SonarQube AI</text>
-    <text x="1005" y="878" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Sentry AI</text>
-    <text x="1005" y="892" text-anchor="middle" fill="var(--text-color-secondary, #94a3b8)" font-size="9">Nobl9 (SLOs)</text>
+    <rect x="1050" y="912" width="90" height="160" rx="10" fill="#d1fae5" stroke="#059669" stroke-width="1.6"/>
+    <text x="1095" y="938" text-anchor="middle" fill="#064e3b" font-size="14" font-weight="800">7. Maint.</text>
+    <text x="1095" y="966" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Datadog</text>
+    <text x="1095" y="987" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">PagerDuty</text>
+    <text x="1095" y="1008" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">DevOps Guru</text>
+    <text x="1095" y="1029" text-anchor="middle" fill="#475569" font-size="11">SonarQube</text>
+    <text x="1095" y="1048" text-anchor="middle" fill="#475569" font-size="11">Nobl9</text>
   </g>
 
   <!-- ===== Legend ===== -->
-  <rect x="60" y="970" width="1020" height="22" rx="4" fill="rgba(255,255,255,0.03)" stroke="var(--border-color, #334155)" stroke-width="0.6"/>
-  <circle cx="78" cy="981" r="4.5" fill="#6366f1"/>
-  <text x="92" y="985" fill="var(--text-color-secondary, #94a3b8)" font-size="9">sevaai-sdlc components</text>
-  <circle cx="240" cy="981" r="4.5" fill="#8b5cf6"/>
-  <text x="254" y="985" fill="var(--text-color-secondary, #94a3b8)" font-size="9">orchestration / LLM</text>
-  <circle cx="380" cy="981" r="4.5" fill="#10b981"/>
-  <text x="394" y="985" fill="var(--text-color-secondary, #94a3b8)" font-size="9">external products / live data</text>
-  <circle cx="560" cy="981" r="4.5" fill="#f59e0b"/>
-  <text x="574" y="985" fill="var(--text-color-secondary, #94a3b8)" font-size="9">artifacts / dossier</text>
-  <circle cx="700" cy="981" r="4.5" fill="#f43f5e"/>
-  <text x="714" y="985" fill="var(--text-color-secondary, #94a3b8)" font-size="9">blocking gates</text>
+  <rect x="60" y="1080" width="1080" height="0" stroke="#cbd5e1" stroke-width="0.6"/>
 </svg>
