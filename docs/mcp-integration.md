@@ -1,6 +1,6 @@
 # MCP integration guide
 
-The toolkit's skills work without any MCPs — they ground in your project's local files. But each stage gets noticeably better when paired with the right MCP server, because the skill can pull live state instead of inferring it. This guide maps MCPs to SDLC stages so you connect what gives you the most leverage first.
+**MCPs are bundled with this plugin.** The repo includes a [`.mcp.json`](../.mcp.json) declaring all the recommended servers per stage. Installing the plugin in Claude Code registers them; you pick which to authenticate. There's also a CLI installer at `scripts/setup-mcps.sh` for terminal users. The skills still work without any MCPs — they fall back to local file reads — but each stage gets noticeably better when paired with the right server, because the skill can pull live state instead of inferring it.
 
 ## Per-stage MCP map
 

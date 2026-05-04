@@ -22,6 +22,7 @@
   "commands": [
     "commands/sdlc.md"
   ],
+  "mcpServers": ".mcp.json",
   "compatibility": {
     "claude-code": ">=1.0",
     "claude-cowork": ">=0.1"

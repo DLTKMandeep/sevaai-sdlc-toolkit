@@ -1,0 +1,99 @@
+{
+  "_comment": "MCP servers bundled with sevaai-sdlc-toolkit. Installing the plugin will offer to register these. Each is OPT-IN — Claude Code prompts before authenticating.",
+
+  "mcpServers": {
+
+    "atlassian-rovo": {
+      "_purpose": "Stages 1, 2, 5 — Jira tickets, Confluence ADRs and PRDs, compliance docs",
+      "_required_for": "stages 1 (requirements), 2 (design), 5 (security)",
+      "_free_tier": "Atlassian Cloud free for up to 10 users",
+      "type": "http",
+      "url": "https://mcp.atlassian.com/v1/mcp"
+    },
+
+    "linear": {
+      "_purpose": "Stage 1 — issue tracker, alternative to Jira",
+      "_required_for": "stage 1 (requirements)",
+      "_free_tier": "Linear free for up to 10 users",
+      "type": "http",
+      "url": "https://mcp.linear.app/mcp"
+    },
+
+    "notion": {
+      "_purpose": "Stages 1, 2 — long-form PRDs, ADRs, knowledge base",
+      "_required_for": "stages 1 (requirements), 2 (design)",
+      "_free_tier": "Notion free tier covers personal use; team workspaces are paid",
+      "type": "http",
+      "url": "https://mcp.notion.com/mcp"
+    },
+
+    "github": {
+      "_purpose": "Stages 2-6 — repo structure, ADRs in repo, PRs, Actions, Dependabot, IaC",
+      "_required_for": "stages 2 (design), 3 (development), 4 (testing), 5 (security), 6 (deployment)",
+      "_free_tier": "GitHub Free for personal and small teams",
+      "_install_note": "Local server. Set GITHUB_PERSONAL_ACCESS_TOKEN in your env first.",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${env:GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
+    },
+
+    "sentry": {
+      "_purpose": "Stage 7 — error patterns feeding the runbook",
+      "_required_for": "stage 7 (maintenance)",
+      "_free_tier": "Sentry Developer Plan: 5K errors/month, free forever",
+      "type": "http",
+      "url": "https://mcp.sentry.dev/mcp"
+    },
+
+    "pagerduty": {
+      "_purpose": "Stage 7 — on-call schedules, paging commands in runbook",
+      "_required_for": "stage 7 (maintenance)",
+      "_free_tier": "PagerDuty Developer Plan: free for individual developers",
+      "type": "http",
+      "url": "https://mcp.pagerduty.com/mcp"
+    },
+
+    "honeycomb": {
+      "_purpose": "Stage 7 — SLO definitions grounded in real telemetry",
+      "_required_for": "stage 7 (maintenance)",
+      "_free_tier": "Honeycomb Free: 20M events/month",
+      "type": "http",
+      "url": "https://mcp.honeycomb.io/mcp"
+    },
+
+    "incident-io": {
+      "_purpose": "Stage 7 — incident management, alternative to PagerDuty",
+      "_required_for": "stage 7 (maintenance)",
+      "_optional": true,
+      "type": "http",
+      "url": "https://mcp.incident.io/mcp"
+    },
+
+    "google-compute-engine": {
+      "_purpose": "Stage 6 — read live GCE infrastructure state",
+      "_required_for": "stage 6 (deployment) when project runs on GCP",
+      "_optional": true,
+      "type": "http",
+      "url": "https://compute.googleapis.com/mcp"
+    },
+
+    "cloudflare-developer-platform": {
+      "_purpose": "Stage 6 — Workers, KV, R2 state for edge-deployed projects",
+      "_required_for": "stage 6 (deployment) when project runs on Cloudflare",
+      "_optional": true,
+      "type": "http",
+      "url": "https://bindings.mcp.cloudflare.com/mcp"
+    },
+
+    "figma": {
+      "_purpose": "Stage 2 — pull UI design context when the feature has visual design",
+      "_required_for": "stage 2 (design) for UI features only",
+      "_optional": true,
+      "type": "http",
+      "url": "https://mcp.figma.com/mcp"
+    }
+
+  }
+}

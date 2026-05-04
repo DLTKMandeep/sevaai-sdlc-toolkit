@@ -51,6 +51,34 @@ ln -s "$(pwd)/skills"/* ~/.claude/skills/
 ln -s "$(pwd)/commands/sdlc.md" ~/.claude/commands/sdlc.md
 ```
 
+## MCPs are bundled with the plugin
+
+The plugin ships a [`.mcp.json`](.mcp.json) that declares the high-value MCP servers each SDLC stage benefits from. When you install the plugin in Claude Code, you'll be offered to register and authenticate each one. Pick what your team uses; skip the rest. They map to stages like this:
+
+| MCP | Stages | Free tier? |
+|---|---|---|
+| **GitHub** | 2-6 | yes |
+| **Atlassian Rovo** (Jira + Confluence) | 1, 2, 5 | yes (≤10 users) |
+| **Notion** | 1, 2 | personal yes; teams paid |
+| **Linear** (alt to Jira) | 1 | yes (≤10 users) |
+| **Sentry** | 7 | yes (5K errors/mo) |
+| **PagerDuty** | 7 | yes (Developer plan) |
+| **Honeycomb** | 7 | yes (20M events/mo) |
+| **Google Compute Engine** | 6 (GCP) | yes |
+| **Cloudflare Developer Platform** | 6 (Cloudflare) | yes |
+| **Figma** | 2 (UI features) | yes |
+
+Prefer the terminal? Run the bundled installer:
+
+```bash
+./scripts/setup-mcps.sh --minimal   # GitHub + Atlassian + Sentry
+./scripts/setup-mcps.sh --all       # everything (will OAuth each)
+./scripts/setup-mcps.sh             # interactive, pick one by one
+./scripts/setup-mcps.sh --list      # just show what's available
+```
+
+If you skip MCP setup entirely, the toolkit still works — every skill falls back to local file reads, the `.sevaai-sdlc.yaml` config, and your chat input.
+
 ## Quick start
 
 Once installed, just describe what you want to build:
@@ -80,22 +108,19 @@ The orchestrator skill picks up the trigger, walks all seven stages, and writes 
 ```
 sevaai-sdlc-toolkit/
 ├── plugin.json                   # marketplace manifest
+├── .mcp.json                     # bundled MCP servers per stage
 ├── README.md                     # this file
-├── skills/
-│   ├── sdlc-orchestrator/        # top-level: runs all 7 stages
-│   ├── sdlc-requirements/        # stage 1
-│   ├── sdlc-design/              # stage 2
-│   ├── sdlc-development/         # stage 3
-│   ├── sdlc-testing/             # stage 4
-│   ├── sdlc-security/            # stage 5
-│   ├── sdlc-deployment/          # stage 6
-│   └── sdlc-maintenance/         # stage 7
+├── skills/                       # 7 stage skills + orchestrator
 ├── commands/
 │   └── sdlc.md                   # /sdlc slash command
+├── scripts/
+│   └── setup-mcps.sh             # CLI installer for the bundled MCPs
 ├── examples/
-│   └── sample_feature.md         # example input
+│   └── sample_feature.md
 └── docs/
-    └── customization.md          # how to tune for your stack
+    ├── customization.md          # tune for your stack
+    ├── mcp-integration.md        # which MCPs help which stages
+    └── reference-architecture.svg
 ```
 
 Each stage skill is a folder with a `SKILL.md` (instructions for the AI) and a `templates/` directory of artifact templates that the skill fills in.
