@@ -3,9 +3,17 @@
 [![Validate plugin](https://github.com/DLTKMandeep/sevaai-sdlc-toolkit/actions/workflows/validate.yml/badge.svg)](https://github.com/DLTKMandeep/sevaai-sdlc-toolkit/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Automated, AI-powered Software Development Lifecycle for any codebase.**
+**Automated, AI-powered Software Development Lifecycle for any codebase, in any AI tool.**
 
-Drop this plugin into Claude Code or Cowork and get seven composable skills that walk a feature from idea to operations: Requirements -> Design -> Development -> Testing -> Security -> Deployment -> Maintenance. Each skill is self-contained, references the real-world tools you already use (Jira, Snyk, Datadog, Harness, etc.), and produces ship-ready markdown artifacts.
+Drop this plugin into your AI assistant and get seven composable skills that walk a feature from idea to operations: Requirements -> Design -> Development -> Testing -> Security -> Deployment -> Maintenance. Each skill is self-contained, references the real-world tools you already use (Jira, Snyk, Datadog, Harness, etc.), and produces ship-ready markdown artifacts.
+
+### Works with
+
+| Claude Code / Cowork | Cursor | Aider | ChatGPT (custom GPT) | Gemini (Gem) | Anything else |
+|---|---|---|---|---|---|
+| `plugin.json` | `.cursor/rules/*.mdc` | `CONVENTIONS.md` | one GPT per stage | one Gem per stage | raw prompt files |
+
+The skills are markdown — they work anywhere you can set custom instructions. See [`adapters/`](adapters/) for ready-to-paste configs per tool.
 
 ```
 +-------------+   +--------+   +-------------+   +---------+   +----------+   +------------+   +-------------+
@@ -50,6 +58,35 @@ Symlink the skills into your Claude config:
 ln -s "$(pwd)/skills"/* ~/.claude/skills/
 ln -s "$(pwd)/commands/sdlc.md" ~/.claude/commands/sdlc.md
 ```
+
+### Cursor
+
+```bash
+# from your project root
+cp -R /path/to/sevaai-sdlc-toolkit/adapters/cursor/.cursor .
+```
+
+Cursor auto-loads each `.mdc` rule when its trigger phrase fires.
+
+### Aider
+
+```bash
+aider --read /path/to/sevaai-sdlc-toolkit/adapters/aider/CONVENTIONS.md
+```
+
+Or add to `.aider.conf.yml`:
+```yaml
+read:
+  - /path/to/sevaai-sdlc-toolkit/adapters/aider/CONVENTIONS.md
+```
+
+### ChatGPT custom GPT / Gemini Gem
+
+Open `adapters/openai-gpt/sdlc-<stage>.md` (or `adapters/gemini-gem/...`), paste the body as the GPT/Gem's Instructions. One per stage. Optional: upload your README + ADRs as Knowledge.
+
+### Anything else
+
+`adapters/raw/sdlc-<stage>.md` is a tool-agnostic prompt — works in Cline, Continue.dev, Roo Code, Ollama, LM Studio, raw API calls, anywhere you can set a system prompt.
 
 ## MCPs are bundled with the plugin
 
@@ -107,19 +144,26 @@ The orchestrator skill picks up the trigger, walks all seven stages, and writes 
 
 ```
 sevaai-sdlc-toolkit/
-├── plugin.json                   # marketplace manifest
+├── plugin.json                   # marketplace manifest (Claude Code)
 ├── .mcp.json                     # bundled MCP servers per stage
 ├── README.md                     # this file
-├── skills/                       # 7 stage skills + orchestrator
+├── skills/                       # 7 stage skills + orchestrator (source of truth)
 ├── commands/
 │   └── sdlc.md                   # /sdlc slash command
+├── adapters/                     # generated formats for non-Claude tools
+│   ├── cursor/                   # .cursor/rules/*.mdc
+│   ├── aider/                    # CONVENTIONS.md
+│   ├── openai-gpt/               # paste-as-Instructions per stage
+│   ├── gemini-gem/               # paste-as-instructions per stage
+│   └── raw/                      # tool-agnostic prompts
 ├── scripts/
-│   └── setup-mcps.sh             # CLI installer for the bundled MCPs
+│   ├── setup-mcps.sh             # CLI installer for the bundled MCPs
+│   └── build-adapters.py         # regenerate adapters from skills/
 ├── examples/
 │   └── sample_feature.md
 └── docs/
-    ├── customization.md          # tune for your stack
-    ├── mcp-integration.md        # which MCPs help which stages
+    ├── customization.md
+    ├── mcp-integration.md
     └── reference-architecture.svg
 ```
 
