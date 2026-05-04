@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 # scripts/setup-mcps.sh — install the MCP servers bundled with sevaai-sdlc-toolkit.
 #
-# Usage:
-#   ./scripts/setup-mcps.sh                # interactive: prompts which to install
-#   ./scripts/setup-mcps.sh --all          # install all (will trigger OAuth for each)
-#   ./scripts/setup-mcps.sh --minimal      # install minimum recommended (Atlassian + GitHub + Sentry)
-#   ./scripts/setup-mcps.sh --list         # just print what's available
+# Reads .mcp.json as the source of truth so any MCPs you add there show up here.
 #
-# Requires: Claude Code CLI (`claude` command) installed and authenticated.
+# Usage:
+#   ./scripts/setup-mcps.sh                # interactive: pick which to install
+#   ./scripts/setup-mcps.sh --all          # install every non-template entry
+#   ./scripts/setup-mcps.sh --minimal      # GitHub + Atlassian + Sentry
+#   ./scripts/setup-mcps.sh --stage <N>    # only entries that benefit stage N (1-7)
+#   ./scripts/setup-mcps.sh --list         # print catalog grouped by stage
+#
+# Requires: jq, and Claude Code CLI ('claude' command) authenticated.
 
 set -euo pipefail
 
@@ -15,92 +18,115 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PLUGIN_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 MCP_FILE="$PLUGIN_ROOT/.mcp.json"
 
-if [[ ! -f "$MCP_FILE" ]]; then
-  echo "error: $MCP_FILE not found" >&2
-  exit 1
-fi
+[[ -f "$MCP_FILE" ]] || { echo "error: $MCP_FILE not found" >&2; exit 1; }
+command -v jq >/dev/null  || { echo "error: jq required (brew install jq)" >&2; exit 1; }
 
-if ! command -v claude >/dev/null; then
-  echo "error: 'claude' CLI not found. Install Claude Code first: https://docs.claude.com/claude-code" >&2
-  exit 1
-fi
+# Filter out the _custom_endpoint_template — it's an example, not a real MCP.
+real_servers() {
+  jq -r '.mcpServers | to_entries[] | select(.key | startswith("_") | not) | .key' "$MCP_FILE"
+}
 
-# Map of server-name -> human description (kept in sync with .mcp.json)
-declare -A DESCRIPTIONS=(
-  [atlassian-rovo]="Jira + Confluence (stages 1, 2, 5)"
-  [linear]="Linear issues (stage 1, alt to Jira)"
-  [notion]="Notion docs (stages 1, 2)"
-  [github]="GitHub repo, PRs, Actions (stages 2-6)"
-  [sentry]="Sentry errors (stage 7)"
-  [pagerduty]="PagerDuty on-call (stage 7)"
-  [honeycomb]="Honeycomb SLOs (stage 7)"
-  [incident-io]="incident.io incidents (stage 7, alt to PagerDuty)"
-  [google-compute-engine]="GCP Compute Engine (stage 6, if on GCP)"
-  [cloudflare-developer-platform]="Cloudflare Workers (stage 6, if on Cloudflare)"
-  [figma]="Figma design context (stage 2, UI features)"
-)
+describe() {  # describe <server-name>
+  jq -r --arg s "$1" '.mcpServers[$s]._purpose // ""' "$MCP_FILE"
+}
 
-MINIMAL_SET="atlassian-rovo github sentry"
+stages_for() {  # stages_for <server-name>  -> "1, 2, 5"
+  jq -r --arg s "$1" '.mcpServers[$s]._stages // [] | join(", ")' "$MCP_FILE"
+}
 
-ALL_SERVERS=$(jq -r '.mcpServers | keys[]' "$MCP_FILE")
+free_for() {
+  jq -r --arg s "$1" '.mcpServers[$s]._free_tier // "n/a"' "$MCP_FILE"
+}
+
+is_optional() {
+  jq -e --arg s "$1" '.mcpServers[$s]._optional // false' "$MCP_FILE" >/dev/null
+}
+
+list_servers() {
+  echo "MCP catalog (from $MCP_FILE):"
+  echo
+  for stage in 1 2 3 4 5 6 7; do
+    matches=$(jq -r --argjson s "$stage" '.mcpServers | to_entries[] | select(.key | startswith("_") | not) | select((.value._stages // []) | index($s)) | .key' "$MCP_FILE")
+    if [[ -n "$matches" ]]; then
+      echo "Stage $stage:"
+      while IFS= read -r srv; do
+        printf "  %-35s  %s  (%s)\n" "$srv" "$(describe "$srv" | head -c 70)" "$(free_for "$srv" | head -c 40)"
+      done <<<"$matches"
+      echo
+    fi
+  done
+}
+
+MINIMAL=("atlassian-rovo" "github" "sentry")
 
 mode="${1:-}"
+arg2="${2:-}"
 
 case "$mode" in
   --list)
-    echo "Available MCP servers in this plugin:"
-    for s in $ALL_SERVERS; do
-      printf "  %-30s  %s\n" "$s" "${DESCRIPTIONS[$s]:-}"
-    done
+    list_servers
     exit 0
     ;;
   --all)
-    SELECTED=$ALL_SERVERS
+    mapfile -t SELECTED < <(real_servers)
     ;;
   --minimal)
-    SELECTED=$MINIMAL_SET
+    SELECTED=("${MINIMAL[@]}")
+    ;;
+  --stage)
+    [[ -n "$arg2" ]] || { echo "usage: --stage <1-7>" >&2; exit 1; }
+    mapfile -t SELECTED < <(jq -r --argjson s "$arg2" '.mcpServers | to_entries[] | select(.key | startswith("_") | not) | select((.value._stages // []) | index($s)) | .key' "$MCP_FILE")
     ;;
   "")
-    SELECTED=""
-    echo "Pick which MCPs to install (Y/n for each). Press Enter to accept default."
+    SELECTED=()
+    echo "Pick which MCPs to install (Y/n for each). Defaults marked Y are the minimal set."
     echo
-    for s in $ALL_SERVERS; do
+    while IFS= read -r srv; do
       default="N"
-      [[ " $MINIMAL_SET " == *" $s "* ]] && default="Y"
-      read -r -p "  install $s — ${DESCRIPTIONS[$s]:-} [$default]: " ans </dev/tty || true
+      for m in "${MINIMAL[@]}"; do [[ "$m" == "$srv" ]] && default="Y"; done
+      read -r -p "  $srv  [stages $(stages_for "$srv") | $(free_for "$srv")] [$default]: " ans </dev/tty || true
       ans="${ans:-$default}"
-      if [[ "$ans" =~ ^[Yy]$ ]]; then
-        SELECTED="$SELECTED $s"
-      fi
-    done
+      if [[ "$ans" =~ ^[Yy]$ ]]; then SELECTED+=("$srv"); fi
+    done < <(real_servers)
+    ;;
+  --help|-h)
+    grep '^#' "$0" | head -15
+    exit 0
     ;;
   *)
-    echo "usage: $0 [--list | --all | --minimal]" >&2
+    echo "unknown option: $mode" >&2
+    grep '^#' "$0" | head -15 >&2
     exit 1
     ;;
 esac
 
+if ! command -v claude >/dev/null; then
+  echo "warning: 'claude' CLI not found — printing manual install steps instead."
+  for s in "${SELECTED[@]}"; do
+    echo
+    echo "=== $s ==="
+    jq --arg s "$s" '.mcpServers[$s]' "$MCP_FILE"
+  done
+  exit 0
+fi
+
 echo
-echo "Installing: $SELECTED"
+echo "Installing: ${SELECTED[*]}"
 echo
 
-for s in $SELECTED; do
-  echo "==> claude mcp add-from-plugin sevaai-sdlc $s"
-  # Each Claude Code version has a slightly different add command;
-  # fall back to manual instructions if needed.
+for s in "${SELECTED[@]}"; do
   if claude mcp list 2>/dev/null | grep -q " $s$"; then
-    echo "    already installed, skipping"
+    echo "==> $s already installed, skipping"
     continue
   fi
-
-  url=$(jq -r ".mcpServers[\"$s\"].url // empty" "$MCP_FILE")
+  url=$(jq -r --arg s "$s" '.mcpServers[$s].url // empty' "$MCP_FILE")
   if [[ -n "$url" ]]; then
+    echo "==> claude mcp add $s --transport http --url $url"
     claude mcp add "$s" --transport http --url "$url" || \
-      echo "    (manual fallback) add this URL to your Claude config: $url"
+      echo "    (failed; add manually: $url)"
   else
-    cmd=$(jq -r ".mcpServers[\"$s\"].command // empty" "$MCP_FILE")
-    args=$(jq -r ".mcpServers[\"$s\"].args | join(\" \") // empty" "$MCP_FILE")
-    echo "    local server: $cmd $args  — set required env vars per .mcp.json"
+    echo "==> $s is a local stdio server — see .mcp.json for command + env vars"
+    jq --arg s "$s" '.mcpServers[$s] | {command, args, env}' "$MCP_FILE"
   fi
   echo
 done

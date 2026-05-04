@@ -1,11 +1,11 @@
 {
-  "_comment": "MCP servers bundled with sevaai-sdlc-toolkit. Installing the plugin will offer to register these. Each is OPT-IN — Claude Code prompts before authenticating.",
+  "_comment": "MCP servers bundled with sevaai-sdlc-toolkit. Each entry is OPT-IN — Claude Code prompts before authenticating. URLs are official endpoints where known; edit if your tenant uses a private endpoint. Add your own under mcpServers using the _custom_endpoint_template format at the bottom.",
 
   "mcpServers": {
 
     "atlassian-rovo": {
       "_purpose": "Stages 1, 2, 5 — Jira tickets, Confluence ADRs and PRDs, compliance docs",
-      "_required_for": "stages 1 (requirements), 2 (design), 5 (security)",
+      "_stages": [1, 2, 5],
       "_free_tier": "Atlassian Cloud free for up to 10 users",
       "type": "http",
       "url": "https://mcp.atlassian.com/v1/mcp"
@@ -13,23 +13,86 @@
 
     "linear": {
       "_purpose": "Stage 1 — issue tracker, alternative to Jira",
-      "_required_for": "stage 1 (requirements)",
+      "_stages": [1],
       "_free_tier": "Linear free for up to 10 users",
       "type": "http",
       "url": "https://mcp.linear.app/mcp"
     },
 
+    "asana": {
+      "_purpose": "Stage 1 — project management, alternative to Jira/Linear",
+      "_stages": [1],
+      "_free_tier": "Asana Personal free up to 15 users",
+      "_optional": true,
+      "type": "http",
+      "url": "https://mcp.asana.com/mcp"
+    },
+
     "notion": {
       "_purpose": "Stages 1, 2 — long-form PRDs, ADRs, knowledge base",
-      "_required_for": "stages 1 (requirements), 2 (design)",
+      "_stages": [1, 2],
       "_free_tier": "Notion free tier covers personal use; team workspaces are paid",
       "type": "http",
       "url": "https://mcp.notion.com/mcp"
     },
 
+    "slack": {
+      "_purpose": "Stages 1, 7 — capture requirements from threads; route deploy/incident comms",
+      "_stages": [1, 7],
+      "_free_tier": "Slack Free covers small teams",
+      "_optional": true,
+      "type": "http",
+      "url": "https://mcp.slack.com/mcp"
+    },
+
+    "miro": {
+      "_purpose": "Stage 2 — visual whiteboarding, journey maps, system diagrams",
+      "_stages": [2],
+      "_free_tier": "Miro Free for personal use",
+      "_optional": true,
+      "type": "http",
+      "url": "https://mcp.miro.com/mcp"
+    },
+
+    "lucid": {
+      "_purpose": "Stage 2 — diagramming and ideation",
+      "_stages": [2],
+      "_free_tier": "Lucidchart Free with limits",
+      "_optional": true,
+      "type": "http",
+      "url": "https://mcp.lucid.app/mcp"
+    },
+
+    "figma": {
+      "_purpose": "Stage 2 — pull UI design context for visual features",
+      "_stages": [2],
+      "_free_tier": "Figma Starter plan free",
+      "_optional": true,
+      "type": "http",
+      "url": "https://mcp.figma.com/mcp"
+    },
+
+    "stoplight": {
+      "_purpose": "Stage 2 — host the OpenAPI spec produced by the design stage",
+      "_stages": [2],
+      "_free_tier": "Stoplight free tier (limited workspaces)",
+      "_optional": true,
+      "type": "http",
+      "url": "https://mcp.stoplight.io/mcp"
+    },
+
+    "postman": {
+      "_purpose": "Stages 2, 4 — API contracts and contract testing",
+      "_stages": [2, 4],
+      "_free_tier": "Postman Free plan",
+      "_optional": true,
+      "type": "http",
+      "url": "https://mcp.postman.com/mcp"
+    },
+
     "github": {
       "_purpose": "Stages 2-6 — repo structure, ADRs in repo, PRs, Actions, Dependabot, IaC",
-      "_required_for": "stages 2 (design), 3 (development), 4 (testing), 5 (security), 6 (deployment)",
+      "_stages": [2, 3, 4, 5, 6],
       "_free_tier": "GitHub Free for personal and small teams",
       "_install_note": "Local server. Set GITHUB_PERSONAL_ACCESS_TOKEN in your env first.",
       "command": "npx",
@@ -39,41 +102,109 @@
       }
     },
 
-    "sentry": {
-      "_purpose": "Stage 7 — error patterns feeding the runbook",
-      "_required_for": "stage 7 (maintenance)",
-      "_free_tier": "Sentry Developer Plan: 5K errors/month, free forever",
-      "type": "http",
-      "url": "https://mcp.sentry.dev/mcp"
+    "gitlab": {
+      "_purpose": "Stages 2-6 — alternative to GitHub for repo, MRs, pipelines",
+      "_stages": [2, 3, 4, 5, 6],
+      "_free_tier": "GitLab Free tier",
+      "_optional": true,
+      "_install_note": "Local server. Set GITLAB_PERSONAL_ACCESS_TOKEN.",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-gitlab"],
+      "env": {
+        "GITLAB_PERSONAL_ACCESS_TOKEN": "${env:GITLAB_PERSONAL_ACCESS_TOKEN}"
+      }
     },
 
-    "pagerduty": {
-      "_purpose": "Stage 7 — on-call schedules, paging commands in runbook",
-      "_required_for": "stage 7 (maintenance)",
-      "_free_tier": "PagerDuty Developer Plan: free for individual developers",
-      "type": "http",
-      "url": "https://mcp.pagerduty.com/mcp"
-    },
-
-    "honeycomb": {
-      "_purpose": "Stage 7 — SLO definitions grounded in real telemetry",
-      "_required_for": "stage 7 (maintenance)",
-      "_free_tier": "Honeycomb Free: 20M events/month",
-      "type": "http",
-      "url": "https://mcp.honeycomb.io/mcp"
-    },
-
-    "incident-io": {
-      "_purpose": "Stage 7 — incident management, alternative to PagerDuty",
-      "_required_for": "stage 7 (maintenance)",
+    "azure-devops": {
+      "_purpose": "Stages 2-6 — Microsoft stack repos, pipelines, work items",
+      "_stages": [2, 3, 4, 5, 6],
+      "_free_tier": "Azure DevOps free for first 5 users",
       "_optional": true,
       "type": "http",
-      "url": "https://mcp.incident.io/mcp"
+      "url": "https://dev.azure.com/_mcp"
+    },
+
+    "sourcegraph": {
+      "_purpose": "Stage 3 — code search across many repos when codebase is huge",
+      "_stages": [3, 4, 5],
+      "_free_tier": "Sourcegraph free for OSS",
+      "_optional": true,
+      "type": "http",
+      "url": "https://sourcegraph.com/.api/mcp"
+    },
+
+    "browserstack": {
+      "_purpose": "Stage 4 — cross-browser/device test matrix",
+      "_stages": [4],
+      "_free_tier": "BrowserStack free trial",
+      "_optional": true,
+      "type": "http",
+      "url": "https://api.browserstack.com/mcp"
+    },
+
+    "snyk": {
+      "_purpose": "Stage 5 — vulnerability scanning, license compliance, IaC misconfig",
+      "_stages": [5],
+      "_free_tier": "Snyk free for individuals and small teams",
+      "_optional": true,
+      "type": "http",
+      "url": "https://api.snyk.io/mcp"
+    },
+
+    "okta": {
+      "_purpose": "Stage 5 — identity for auth-touching features",
+      "_stages": [5],
+      "_free_tier": "Okta Developer free tier",
+      "_optional": true,
+      "type": "http",
+      "url": "https://mcp.okta.com/mcp"
+    },
+
+    "auth0": {
+      "_purpose": "Stage 5 — auth and identity provider config (Okta-owned)",
+      "_stages": [5],
+      "_free_tier": "Auth0 Free up to 7,500 active users",
+      "_optional": true,
+      "type": "http",
+      "url": "https://mcp.auth0.com/mcp"
+    },
+
+    "vercel": {
+      "_purpose": "Stage 6 — frontend deploys, preview URLs, analytics",
+      "_stages": [6],
+      "_free_tier": "Vercel Hobby plan free",
+      "_optional": true,
+      "type": "http",
+      "url": "https://mcp.vercel.com/mcp"
+    },
+
+    "netlify": {
+      "_purpose": "Stage 6 — alternative to Vercel for static / Jamstack deploys",
+      "_stages": [6],
+      "_free_tier": "Netlify Free plan",
+      "_optional": true,
+      "type": "http",
+      "url": "https://api.netlify.com/mcp"
+    },
+
+    "aws": {
+      "_purpose": "Stage 6 — read live AWS infra (ECS, Lambda, RDS, EKS, S3) for deploy plans",
+      "_stages": [6],
+      "_free_tier": "AWS Free tier; multiple official MCP servers — pick per service",
+      "_optional": true,
+      "_install_note": "AWS publishes per-service MCP servers; see https://github.com/awslabs/mcp",
+      "command": "npx",
+      "args": ["-y", "@awslabs/mcp-server"],
+      "env": {
+        "AWS_REGION": "${env:AWS_REGION}",
+        "AWS_PROFILE": "${env:AWS_PROFILE}"
+      }
     },
 
     "google-compute-engine": {
       "_purpose": "Stage 6 — read live GCE infrastructure state",
-      "_required_for": "stage 6 (deployment) when project runs on GCP",
+      "_stages": [6],
+      "_free_tier": "GCP free tier",
       "_optional": true,
       "type": "http",
       "url": "https://compute.googleapis.com/mcp"
@@ -81,18 +212,125 @@
 
     "cloudflare-developer-platform": {
       "_purpose": "Stage 6 — Workers, KV, R2 state for edge-deployed projects",
-      "_required_for": "stage 6 (deployment) when project runs on Cloudflare",
+      "_stages": [6],
+      "_free_tier": "Cloudflare free Workers tier",
       "_optional": true,
       "type": "http",
       "url": "https://bindings.mcp.cloudflare.com/mcp"
     },
 
-    "figma": {
-      "_purpose": "Stage 2 — pull UI design context when the feature has visual design",
-      "_required_for": "stage 2 (design) for UI features only",
+    "launchdarkly": {
+      "_purpose": "Stage 6 — feature flag state and rollout schedule",
+      "_stages": [6],
+      "_free_tier": "LaunchDarkly Starter free trial",
       "_optional": true,
       "type": "http",
-      "url": "https://mcp.figma.com/mcp"
+      "url": "https://mcp.launchdarkly.com/mcp"
+    },
+
+    "terraform-cloud": {
+      "_purpose": "Stage 6 — IaC plan and run state",
+      "_stages": [6],
+      "_free_tier": "Terraform Cloud Free up to 5 users",
+      "_optional": true,
+      "type": "http",
+      "url": "https://app.terraform.io/api/mcp"
+    },
+
+    "sentry": {
+      "_purpose": "Stage 7 — error patterns feeding the runbook",
+      "_stages": [7],
+      "_free_tier": "Sentry Developer Plan: 5K errors/month, free forever",
+      "type": "http",
+      "url": "https://mcp.sentry.dev/mcp"
+    },
+
+    "pagerduty": {
+      "_purpose": "Stage 7 — on-call schedules, paging commands in runbook",
+      "_stages": [7],
+      "_free_tier": "PagerDuty Developer Plan: free for individual developers",
+      "type": "http",
+      "url": "https://mcp.pagerduty.com/mcp"
+    },
+
+    "honeycomb": {
+      "_purpose": "Stage 7 — SLO definitions grounded in real telemetry",
+      "_stages": [7],
+      "_free_tier": "Honeycomb Free: 20M events/month",
+      "type": "http",
+      "url": "https://mcp.honeycomb.io/mcp"
+    },
+
+    "datadog": {
+      "_purpose": "Stage 7 — APM + logs + dashboards. Most common commercial APM.",
+      "_stages": [7],
+      "_free_tier": "Datadog 14-day trial then paid",
+      "_optional": true,
+      "type": "http",
+      "url": "https://mcp.datadoghq.com/mcp"
+    },
+
+    "new-relic": {
+      "_purpose": "Stage 7 — APM alternative to Datadog",
+      "_stages": [7],
+      "_free_tier": "New Relic Free up to 100GB/mo ingest",
+      "_optional": true,
+      "type": "http",
+      "url": "https://api.newrelic.com/mcp"
+    },
+
+    "grafana-cloud": {
+      "_purpose": "Stage 7 — dashboards / Loki logs / Tempo traces / OnCall paging",
+      "_stages": [7],
+      "_free_tier": "Grafana Cloud Free tier (includes OSS stack)",
+      "_optional": true,
+      "type": "http",
+      "url": "https://grafana.com/api/mcp"
+    },
+
+    "splunk": {
+      "_purpose": "Stage 7 — log search and SOC integrations",
+      "_stages": [5, 7],
+      "_free_tier": "Splunk Free with index limits",
+      "_optional": true,
+      "type": "http",
+      "url": "https://mcp.splunk.com/mcp"
+    },
+
+    "incident-io": {
+      "_purpose": "Stage 7 — incident management, alternative to PagerDuty",
+      "_stages": [7],
+      "_free_tier": "incident.io has paid plans only beyond a small trial",
+      "_optional": true,
+      "type": "http",
+      "url": "https://mcp.incident.io/mcp"
+    },
+
+    "betterstack": {
+      "_purpose": "Stage 7 — uptime monitoring and status page",
+      "_stages": [7],
+      "_free_tier": "BetterStack Free for small projects",
+      "_optional": true,
+      "type": "http",
+      "url": "https://mcp.betterstack.com/mcp"
+    },
+
+    "_custom_endpoint_template": {
+      "_purpose": "TEMPLATE — copy and rename to add your own MCP. Delete this entry from your fork. Both `http` (remote) and `command` (local stdio) styles are supported.",
+      "_stages": [],
+      "_free_tier": "n/a — this is a template",
+      "_optional": true,
+      "_remote_style_example": {
+        "type": "http",
+        "url": "https://mcp.your-vendor.com/mcp"
+      },
+      "_local_stdio_example": {
+        "command": "npx",
+        "args": ["-y", "your-mcp-server-package"],
+        "env": {
+          "YOUR_API_KEY": "${env:YOUR_API_KEY}"
+        }
+      }
     }
 
   }

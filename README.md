@@ -108,11 +108,14 @@ The plugin ships a [`.mcp.json`](.mcp.json) that declares the high-value MCP ser
 Prefer the terminal? Run the bundled installer:
 
 ```bash
-./scripts/setup-mcps.sh --minimal   # GitHub + Atlassian + Sentry
-./scripts/setup-mcps.sh --all       # everything (will OAuth each)
-./scripts/setup-mcps.sh             # interactive, pick one by one
-./scripts/setup-mcps.sh --list      # just show what's available
+./scripts/setup-mcps.sh --minimal       # GitHub + Atlassian + Sentry
+./scripts/setup-mcps.sh --all           # everything (will OAuth each)
+./scripts/setup-mcps.sh --stage 7       # only the MCPs that benefit stage 7
+./scripts/setup-mcps.sh                 # interactive, pick one by one
+./scripts/setup-mcps.sh --list          # browse the catalog grouped by stage
 ```
+
+See [docs/mcp-catalog.md](docs/mcp-catalog.md) for the full list — 35+ servers across all 7 stages, including a template for adding your own custom or on-prem endpoints.
 
 If you skip MCP setup entirely, the toolkit still works — every skill falls back to local file reads, the `.sevaai-sdlc.yaml` config, and your chat input.
 
