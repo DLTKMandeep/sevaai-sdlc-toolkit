@@ -1,0 +1,29 @@
+{
+  "name": "sevaai-sdlc",
+  "version": "0.1.0",
+  "description": "Automated AI-powered Software Development Lifecycle. Seven composable skills (Requirements, Design, Development, Testing, Security, Deployment, Maintenance) plus an orchestrator that runs them end-to-end against any feature in any codebase.",
+  "author": {
+    "name": "AI SDLC Toolkit",
+    "url": "https://github.com/DLTKMandeep/sevaai-sdlc-toolkit"
+  },
+  "homepage": "https://github.com/DLTKMandeep/sevaai-sdlc-toolkit",
+  "license": "MIT",
+  "keywords": ["sdlc", "sevaai-sdlc", "requirements", "design", "testing", "security", "devops", "aiops", "claude-code", "cowork", "skills"],
+  "skills": [
+    "skills/sdlc-orchestrator",
+    "skills/sdlc-requirements",
+    "skills/sdlc-design",
+    "skills/sdlc-development",
+    "skills/sdlc-testing",
+    "skills/sdlc-security",
+    "skills/sdlc-deployment",
+    "skills/sdlc-maintenance"
+  ],
+  "commands": [
+    "commands/sdlc.md"
+  ],
+  "compatibility": {
+    "claude-code": ">=1.0",
+    "claude-cowork": ">=0.1"
+  }
+}

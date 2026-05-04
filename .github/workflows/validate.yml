@@ -1,0 +1,59 @@
+name: Validate plugin
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate plugin.json
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, sys
+          data = json.loads(pathlib.Path("plugin.json").read_text())
+          required = ["name", "version", "description", "skills", "commands"]
+          missing = [k for k in required if k not in data]
+          assert not missing, f"plugin.json missing keys: {missing}"
+          for s in data["skills"]:
+              p = pathlib.Path(s) / "SKILL.md"
+              assert p.is_file(), f"missing skill: {p}"
+          for c in data["commands"]:
+              assert pathlib.Path(c).is_file(), f"missing command: {c}"
+          print("plugin.json OK")
+          PY
+
+      - name: Validate SKILL.md frontmatter
+        run: |
+          python3 - <<'PY'
+          import pathlib, re, sys
+          ok = True
+          for p in sorted(pathlib.Path("skills").glob("*/SKILL.md")):
+              text = p.read_text()
+              m = re.match(r"^---\n(.*?)\n---\n", text, re.DOTALL)
+              if not m:
+                  print(f"NO FRONTMATTER: {p}"); ok = False; continue
+              fm = m.group(1)
+              for field in ("name", "description"):
+                  if f"{field}:" not in fm:
+                      print(f"MISSING {field}: {p}"); ok = False
+              desc_match = re.search(r"description:\s*(.+)", fm)
+              if desc_match and len(desc_match.group(1).strip()) < 60:
+                  print(f"DESCRIPTION TOO SHORT (won't trigger reliably): {p}")
+                  ok = False
+          sys.exit(0 if ok else 1)
+          PY
+
+      - name: Lint markdown
+        run: |
+          npx --yes markdownlint-cli2 "**/*.md" "#node_modules" "#examples" || true
