@@ -1,0 +1,215 @@
+<svg viewBox="0 0 1100 1000" xmlns="http://www.w3.org/2000/svg" role="img" style="font-family: system-ui, -apple-system, sans-serif;">
+  <title>sevaai-sdlc reference architecture</title>
+  <desc>Flow diagram showing how a user trigger routes through Claude's skill resolution into either the orchestrator or a single stage, the runtime tools each stage uses (Glob, Read, Grep, LLM, Write, optional MCP), the output dossier, and the real-world products each of the 7 stages hands off to.</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="8" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,3.5 L0,7z" fill="#8892a4"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="8" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,3.5 L0,7z" fill="#6c8cff"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1100" height="1000" fill="var(--bg-color, #0a0e1a)" opacity="0.4"/>
+
+  <!-- Title -->
+  <text x="550" y="30" text-anchor="middle" fill="var(--text-color, #e2e8f0)" font-size="18" font-weight="700">sevaai-sdlc — Reference Architecture</text>
+  <text x="550" y="50" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="11">Flow + tools used at each stage</text>
+
+  <!-- ===== Row 1: Entry points ===== -->
+  <text x="60" y="85" fill="var(--text-color-secondary, #8892a4)" font-size="10" font-weight="600">USER ENTRY</text>
+
+  <rect x="60" y="95" width="280" height="50" rx="8" fill="rgba(108,140,255,0.08)" stroke="#6c8cff" stroke-width="1.2"/>
+  <text x="200" y="118" text-anchor="middle" fill="#6c8cff" font-size="12" font-weight="700">Slash command</text>
+  <text x="200" y="134" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="10" font-family="monospace">/sdlc Add OAuth signup</text>
+
+  <rect x="410" y="95" width="280" height="50" rx="8" fill="rgba(108,140,255,0.08)" stroke="#6c8cff" stroke-width="1.2"/>
+  <text x="550" y="118" text-anchor="middle" fill="#6c8cff" font-size="12" font-weight="700">Natural language (full pipeline)</text>
+  <text x="550" y="134" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="10">"Run the full SDLC for OAuth signup"</text>
+
+  <rect x="760" y="95" width="280" height="50" rx="8" fill="rgba(108,140,255,0.08)" stroke="#6c8cff" stroke-width="1.2"/>
+  <text x="900" y="118" text-anchor="middle" fill="#6c8cff" font-size="12" font-weight="700">Natural language (single stage)</text>
+  <text x="900" y="134" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="10">"Generate a threat model for ..."</text>
+
+  <!-- arrows down -->
+  <line x1="200" y1="145" x2="350" y2="180" stroke="#6c8cff" stroke-width="1.2" marker-end="url(#arrow-blue)"/>
+  <line x1="550" y1="145" x2="450" y2="180" stroke="#6c8cff" stroke-width="1.2" marker-end="url(#arrow-blue)"/>
+  <line x1="900" y1="145" x2="700" y2="180" stroke="#6c8cff" stroke-width="1.2" marker-end="url(#arrow-blue)"/>
+
+  <!-- ===== Row 2: Skill Resolution ===== -->
+  <rect x="350" y="180" width="400" height="50" rx="8" fill="rgba(108,140,255,0.12)" stroke="#6c8cff" stroke-width="1.5"/>
+  <text x="550" y="203" text-anchor="middle" fill="#6c8cff" font-size="13" font-weight="700">Skill Resolution (Claude)</text>
+  <text x="550" y="219" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="10">matches trigger phrase against SKILL.md frontmatter `description`</text>
+
+  <!-- Branch arrows -->
+  <line x1="450" y1="230" x2="280" y2="280" stroke="#6c8cff" stroke-width="1.2" marker-end="url(#arrow-blue)"/>
+  <line x1="650" y1="230" x2="820" y2="280" stroke="#6c8cff" stroke-width="1.2" marker-end="url(#arrow-blue)"/>
+
+  <!-- ===== Row 3: Orchestrator vs Single Stage ===== -->
+  <rect x="60" y="280" width="440" height="80" rx="8" fill="rgba(168,85,247,0.06)" stroke="#a855f7" stroke-width="1.2"/>
+  <text x="280" y="304" text-anchor="middle" fill="#a855f7" font-size="13" font-weight="700">sdlc-orchestrator skill</text>
+  <text x="280" y="324" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="10">reads .sevaai-sdlc.yaml &#183; creates dossier folder</text>
+  <text x="280" y="340" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="10">writes 00-index.md &#183; runs stages 1-&gt;7 in order</text>
+  <text x="280" y="354" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="10" font-style="italic">halts pipeline if Security marks BLOCKING</text>
+
+  <rect x="600" y="280" width="440" height="80" rx="8" fill="rgba(52,211,153,0.06)" stroke="#34d399" stroke-width="1.2"/>
+  <text x="820" y="304" text-anchor="middle" fill="#34d399" font-size="13" font-weight="700">Single stage skill</text>
+  <text x="820" y="324" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="10">e.g., sdlc-security, sdlc-testing</text>
+  <text x="820" y="340" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="10">runs only that stage's logic</text>
+  <text x="820" y="354" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="10" font-style="italic">writes its single artifact</text>
+
+  <!-- arrows down to runner -->
+  <line x1="280" y1="360" x2="450" y2="400" stroke="#8892a4" stroke-width="1" marker-end="url(#arrow)"/>
+  <line x1="820" y1="360" x2="650" y2="400" stroke="#8892a4" stroke-width="1" marker-end="url(#arrow)"/>
+
+  <!-- ===== Row 4: Stage Runner — the engine ===== -->
+  <rect x="100" y="400" width="900" height="170" rx="10" fill="rgba(108,140,255,0.04)" stroke="#6c8cff" stroke-width="1" stroke-dasharray="5,3"/>
+  <text x="550" y="424" text-anchor="middle" fill="#6c8cff" font-size="13" font-weight="700">Stage Runner — the same engine runs every stage</text>
+  <text x="550" y="440" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="10">SKILL.md provides instructions &#183; templates/artifact.md provides skeleton &#183; the LLM does synthesis</text>
+
+  <!-- 6 tool boxes in a row -->
+  <g font-family="system-ui">
+    <rect x="125" y="465" width="135" height="80" rx="6" fill="rgba(108,140,255,0.10)" stroke="#6c8cff" stroke-width="1"/>
+    <text x="192" y="486" text-anchor="middle" fill="#6c8cff" font-size="11" font-weight="700">Glob</text>
+    <text x="192" y="502" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">discover files</text>
+    <text x="192" y="516" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="8" font-family="monospace">README*</text>
+    <text x="192" y="528" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="8" font-family="monospace">docs/**/*.md</text>
+    <text x="192" y="540" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="8" font-family="monospace">src/**</text>
+
+    <rect x="270" y="465" width="135" height="80" rx="6" fill="rgba(108,140,255,0.10)" stroke="#6c8cff" stroke-width="1"/>
+    <text x="337" y="486" text-anchor="middle" fill="#6c8cff" font-size="11" font-weight="700">Read</text>
+    <text x="337" y="502" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">open files</text>
+    <text x="337" y="516" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="8">README, ADRs,</text>
+    <text x="337" y="528" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="8">prior dossier</text>
+    <text x="337" y="540" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="8">artifacts</text>
+
+    <rect x="415" y="465" width="135" height="80" rx="6" fill="rgba(108,140,255,0.10)" stroke="#6c8cff" stroke-width="1"/>
+    <text x="482" y="486" text-anchor="middle" fill="#6c8cff" font-size="11" font-weight="700">Grep</text>
+    <text x="482" y="502" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">search code</text>
+    <text x="482" y="516" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="8">find auth, api</text>
+    <text x="482" y="528" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="8">handlers, db</text>
+    <text x="482" y="540" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="8">migrations</text>
+
+    <rect x="560" y="465" width="135" height="80" rx="6" fill="rgba(168,85,247,0.12)" stroke="#a855f7" stroke-width="1.2"/>
+    <text x="627" y="486" text-anchor="middle" fill="#a855f7" font-size="11" font-weight="700">LLM call</text>
+    <text x="627" y="502" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">synthesis</text>
+    <text x="627" y="516" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="8">tier per stage:</text>
+    <text x="627" y="528" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="8">fast/balanced/</text>
+    <text x="627" y="540" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="8">deep</text>
+
+    <rect x="705" y="465" width="135" height="80" rx="6" fill="rgba(52,211,153,0.10)" stroke="#34d399" stroke-width="1"/>
+    <text x="772" y="486" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700">MCP (optional)</text>
+    <text x="772" y="502" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">live data</text>
+    <text x="772" y="516" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="8">Jira, Linear,</text>
+    <text x="772" y="528" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="8">GitHub, Datadog</text>
+    <text x="772" y="540" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="8">if connected</text>
+
+    <rect x="850" y="465" width="135" height="80" rx="6" fill="rgba(108,140,255,0.10)" stroke="#6c8cff" stroke-width="1"/>
+    <text x="917" y="486" text-anchor="middle" fill="#6c8cff" font-size="11" font-weight="700">Write</text>
+    <text x="917" y="502" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">save artifact</text>
+    <text x="917" y="516" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="8">.sevaai-sdlc/</text>
+    <text x="917" y="528" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="8">{slug}/</text>
+    <text x="917" y="540" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="8">0N-stage.md</text>
+  </g>
+
+  <!-- arrow down to dossier -->
+  <line x1="550" y1="570" x2="550" y2="610" stroke="#8892a4" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+  <!-- ===== Row 5: Output dossier ===== -->
+  <rect x="280" y="610" width="540" height="100" rx="10" fill="rgba(251,191,36,0.06)" stroke="#fbbf24" stroke-width="1.2"/>
+  <text x="550" y="634" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="700">Feature dossier</text>
+  <text x="550" y="652" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="10" font-family="monospace">.sevaai-sdlc/{feature-slug}/</text>
+  <text x="305" y="675" fill="var(--text-color-secondary, #8892a4)" font-size="9" font-family="monospace">00-index.md  &#183;  01-requirements.md  &#183;  02-design.md  &#183;  03-development.md</text>
+  <text x="305" y="690" fill="var(--text-color-secondary, #8892a4)" font-size="9" font-family="monospace">04-testing.md  &#183;  05-security.md  &#183;  06-deployment.md  &#183;  07-maintenance.md</text>
+
+  <!-- arrow down to handoff -->
+  <line x1="550" y1="710" x2="550" y2="745" stroke="#8892a4" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+  <!-- ===== Row 6: Hand-off to real products ===== -->
+  <text x="60" y="765" fill="var(--text-color-secondary, #8892a4)" font-size="10" font-weight="600">HAND-OFF — each stage's artifact ships into your real toolchain</text>
+
+  <g font-family="system-ui">
+    <!-- Stage 1 -->
+    <rect x="60" y="780" width="138" height="180" rx="6" fill="rgba(52,211,153,0.05)" stroke="#34d399" stroke-width="1"/>
+    <text x="129" y="800" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700">1. Requirements</text>
+    <text x="129" y="822" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Jira</text>
+    <text x="129" y="836" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Linear</text>
+    <text x="129" y="850" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Notion</text>
+    <text x="129" y="864" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Productboard</text>
+    <text x="129" y="878" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Dovetail</text>
+    <text x="129" y="892" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Atlassian Intel.</text>
+
+    <!-- Stage 2 -->
+    <rect x="206" y="780" width="138" height="180" rx="6" fill="rgba(52,211,153,0.05)" stroke="#34d399" stroke-width="1"/>
+    <text x="275" y="800" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700">2. Design</text>
+    <text x="275" y="822" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Eraser AI</text>
+    <text x="275" y="836" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Excalidraw</text>
+    <text x="275" y="850" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Backstage</text>
+    <text x="275" y="864" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">IriusRisk</text>
+    <text x="275" y="878" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Stoplight</text>
+    <text x="275" y="892" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">SwaggerHub</text>
+
+    <!-- Stage 3 -->
+    <rect x="352" y="780" width="138" height="180" rx="6" fill="rgba(52,211,153,0.05)" stroke="#34d399" stroke-width="1"/>
+    <text x="421" y="800" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700">3. Development</text>
+    <text x="421" y="822" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Cursor</text>
+    <text x="421" y="836" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Claude Code</text>
+    <text x="421" y="850" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">GitHub Copilot</text>
+    <text x="421" y="864" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Windsurf</text>
+    <text x="421" y="878" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">CodeRabbit</text>
+    <text x="421" y="892" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Greptile</text>
+
+    <!-- Stage 4 -->
+    <rect x="498" y="780" width="138" height="180" rx="6" fill="rgba(52,211,153,0.05)" stroke="#34d399" stroke-width="1"/>
+    <text x="567" y="800" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700">4. Testing</text>
+    <text x="567" y="822" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Diffblue</text>
+    <text x="567" y="836" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Qodo / CodiumAI</text>
+    <text x="567" y="850" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Mabl</text>
+    <text x="567" y="864" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Testim</text>
+    <text x="567" y="878" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Applitools</text>
+    <text x="567" y="892" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Keploy</text>
+
+    <!-- Stage 5 -->
+    <rect x="644" y="780" width="138" height="180" rx="6" fill="rgba(251,191,36,0.05)" stroke="#fbbf24" stroke-width="1"/>
+    <text x="713" y="800" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="700">5. Security</text>
+    <text x="713" y="822" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Snyk</text>
+    <text x="713" y="836" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Semgrep AI</text>
+    <text x="713" y="850" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">IriusRisk</text>
+    <text x="713" y="864" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">GitGuardian</text>
+    <text x="713" y="878" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Trivy / Wiz</text>
+    <text x="713" y="892" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Lakera</text>
+
+    <!-- Stage 6 -->
+    <rect x="790" y="780" width="138" height="180" rx="6" fill="rgba(52,211,153,0.05)" stroke="#34d399" stroke-width="1"/>
+    <text x="859" y="800" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700">6. Deployment</text>
+    <text x="859" y="822" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Harness</text>
+    <text x="859" y="836" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">LaunchDarkly</text>
+    <text x="859" y="850" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Argo Rollouts</text>
+    <text x="859" y="864" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Pulumi AI</text>
+    <text x="859" y="878" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">GitHub Actions</text>
+    <text x="859" y="892" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Flagger</text>
+
+    <!-- Stage 7 -->
+    <rect x="936" y="780" width="138" height="180" rx="6" fill="rgba(52,211,153,0.05)" stroke="#34d399" stroke-width="1"/>
+    <text x="1005" y="800" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700">7. Maintenance</text>
+    <text x="1005" y="822" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Datadog Bits</text>
+    <text x="1005" y="836" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">PagerDuty</text>
+    <text x="1005" y="850" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">DevOps Guru</text>
+    <text x="1005" y="864" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">SonarQube AI</text>
+    <text x="1005" y="878" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Sentry AI</text>
+    <text x="1005" y="892" text-anchor="middle" fill="var(--text-color-secondary, #8892a4)" font-size="9">Nobl9 (SLOs)</text>
+  </g>
+
+  <!-- ===== Legend ===== -->
+  <rect x="60" y="970" width="1020" height="22" rx="4" fill="rgba(255,255,255,0.02)" stroke="var(--border-color, #2a3050)" stroke-width="0.6"/>
+  <circle cx="78" cy="981" r="4" fill="#6c8cff" opacity="0.6"/>
+  <text x="90" y="985" fill="var(--text-color-secondary, #8892a4)" font-size="9">sevaai-sdlc components</text>
+  <circle cx="240" cy="981" r="4" fill="#a855f7" opacity="0.6"/>
+  <text x="252" y="985" fill="var(--text-color-secondary, #8892a4)" font-size="9">orchestration / LLM</text>
+  <circle cx="380" cy="981" r="4" fill="#34d399" opacity="0.6"/>
+  <text x="392" y="985" fill="var(--text-color-secondary, #8892a4)" font-size="9">external products / live data</text>
+  <circle cx="560" cy="981" r="4" fill="#fbbf24" opacity="0.6"/>
+  <text x="572" y="985" fill="var(--text-color-secondary, #8892a4)" font-size="9">artifacts / blocking gates</text>
+</svg>

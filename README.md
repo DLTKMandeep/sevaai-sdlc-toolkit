@@ -14,6 +14,8 @@ Drop this plugin into Claude Code or Cowork and get seven composable skills that
         ^----------------------------- /sdlc orchestrator ------------------------------------^
 ```
 
+> See [docs/reference-architecture.md](docs/reference-architecture.md) for the full reference architecture diagram showing flow, runtime tools (Glob / Read / Grep / LLM / MCP / Write), and per-stage hand-off to real-world products.
+
 ## Why a skill pack, not a service?
 
 Skills are markdown bundles an AI agent loads on demand. There's no server to host, no API to maintain, no model to fine-tune. The plugin is just files. That makes it:
