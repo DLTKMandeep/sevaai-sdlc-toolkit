@@ -22,7 +22,7 @@ The skills are markdown — they work anywhere you can set custom instructions. 
         ^----------------------------- /sdlc orchestrator ------------------------------------^
 ```
 
-> See [docs/reference-architecture.md](docs/reference-architecture.md) for the full reference architecture diagram showing flow, runtime tools (Glob / Read / Grep / LLM / MCP / Write), and per-stage hand-off to real-world products.
+> See [docs/reference-architecture.md](docs/reference-architecture.md) for the full reference architecture diagram showing flow, runtime tools (Glob / Read / Grep / LLM / MCP / Write), and per-stage hand-off to real-world products. See [docs/sdlc-stages-detail.md](docs/sdlc-stages-detail.md) for the elaborate per-stage breakdown — every sub-activity each stage's artifact must address (Planning, HLD/LLD, System/Manual/Automated Testing, STRIDE/OWASP/Compliance, Feedback Loop, etc.).
 
 ## Why a skill pack, not a service?
 
@@ -90,20 +90,24 @@ Open `adapters/openai-gpt/sdlc-<stage>.md` (or `adapters/gemini-gem/...`), paste
 
 ## MCPs are bundled with the plugin
 
-The plugin ships a [`.mcp.json`](.mcp.json) that declares the high-value MCP servers each SDLC stage benefits from. When you install the plugin in Claude Code, you'll be offered to register and authenticate each one. Pick what your team uses; skip the rest. They map to stages like this:
+The plugin ships a [`.mcp.json`](.mcp.json) declaring **34+ MCP servers** mapped to SDLC stages. When you install the plugin in Claude Code, you'll be offered to register and authenticate each one. Pick what your team uses; skip the rest. The most-used picks at a glance:
 
 | MCP | Stages | Free tier? |
 |---|---|---|
 | **GitHub** | 2-6 | yes |
+| **GitLab** / **Azure DevOps** | 2-6 (alt) | yes |
 | **Atlassian Rovo** (Jira + Confluence) | 1, 2, 5 | yes (≤10 users) |
 | **Notion** | 1, 2 | personal yes; teams paid |
-| **Linear** (alt to Jira) | 1 | yes (≤10 users) |
+| **Linear** / **Asana** | 1 (alts to Jira) | yes (≤10/15 users) |
+| **Slack** | 1, 7 | yes (small teams) |
+| **Figma** / **Miro** / **Lucid** / **Stoplight** | 2 | yes |
+| **Postman** / **BrowserStack** | 4 | free / trial |
+| **Snyk** / **Okta** / **Auth0** | 5 | yes |
+| **Vercel** / **Netlify** / **AWS** / **GCE** / **Cloudflare** / **LaunchDarkly** / **Terraform Cloud** | 6 | yes |
 | **Sentry** | 7 | yes (5K errors/mo) |
 | **PagerDuty** | 7 | yes (Developer plan) |
 | **Honeycomb** | 7 | yes (20M events/mo) |
-| **Google Compute Engine** | 6 (GCP) | yes |
-| **Cloudflare Developer Platform** | 6 (Cloudflare) | yes |
-| **Figma** | 2 (UI features) | yes |
+| **Datadog** / **New Relic** / **Grafana Cloud** / **Splunk** / **BetterStack** / **incident.io** | 7 | trial / free / paid |
 
 Prefer the terminal? Run the bundled installer:
 
@@ -115,7 +119,7 @@ Prefer the terminal? Run the bundled installer:
 ./scripts/setup-mcps.sh --list          # browse the catalog grouped by stage
 ```
 
-See [docs/mcp-catalog.md](docs/mcp-catalog.md) for the full list — 35+ servers across all 7 stages, including a template for adding your own custom or on-prem endpoints.
+See [docs/mcp-catalog.md](docs/mcp-catalog.md) for the full categorized list and [docs/mcp-integration.md](docs/mcp-integration.md) for which MCPs help which stages. The `.mcp.json` includes a `_custom_endpoint_template` so teams can plug in internal or on-prem MCPs by following the same shape.
 
 If you skip MCP setup entirely, the toolkit still works — every skill falls back to local file reads, the `.sevaai-sdlc.yaml` config, and your chat input.
 
@@ -133,24 +137,29 @@ The orchestrator skill picks up the trigger, walks all seven stages, and writes 
 
 ## What you get per stage
 
-| Stage | Real-world products it works alongside | Artifact written |
-|---|---|---|
-| Requirements | Jira / Linear / Notion / Productboard | `01-requirements.md` (user stories + acceptance criteria) |
-| Design | Eraser / Excalidraw / Backstage / IriusRisk | `02-design.md` (component plan, API contracts, ADR) |
-| Development | Cursor / Copilot / Claude Code / CodeRabbit | `03-development.md` (file plan, conventions, review checklist) |
-| Testing | Mabl / Diffblue / Applitools / Qodo | `04-testing.md` (test plan, stubs, edge cases) |
-| Security | Snyk / Semgrep / IriusRisk / Lakera | `05-security.md` (threat model, OWASP map, checklist) |
-| Deployment | Harness / LaunchDarkly / Argo / Pulumi | `06-deployment.md` (rollout, flags, rollback) |
-| Maintenance | Datadog Bits / PagerDuty AIOps / DevOps Guru | `07-maintenance.md` (runbook, SLOs, monitoring) |
+Each stage produces a structured markdown artifact under `.sevaai-sdlc/<feature-slug>/`. Every artifact addresses an explicit set of sub-activities — see [docs/sdlc-stages-detail.md](docs/sdlc-stages-detail.md) for the full breakdown.
+
+| Stage | Sub-activities covered | Artifact | Real-world products it works alongside |
+|---|---|---|---|
+| **1. Requirements** | Planning (scope, objectives, resources, timeline, KPIs) + Functional & Non-functional requirements + Definition of Ready + Compliance flags | `01-requirements.md` | Jira / Linear / Notion / Productboard / Asana |
+| **2. Design** | High-Level Design + Low-Level Design + ADR + first-pass STRIDE | `02-design.md` | Eraser / Backstage / IriusRisk / Stoplight / Figma |
+| **3. Development** | PR breakdown + Coding standards + Scalable code patterns + Version control + Code review checklist | `03-development.md` | Cursor / Copilot / Claude Code / CodeRabbit / Greptile |
+| **4. Testing** | Test pyramid + System / Manual / Automated testing + Test data + Flake budget | `04-testing.md` | Mabl / Diffblue / Applitools / Qodo / BrowserStack |
+| **5. Security** | STRIDE + OWASP Top 10 / ASVS L2 + Auth/authz + Data classification + Supply chain + Secrets + GenAI threats + Compliance + Pen test | `05-security.md` | Snyk / Semgrep / IriusRisk / Lakera / Auth0 / Okta |
+| **6. Deployment** | Release planning + Feature flags + Canary analysis + Deployment automation + Rollback runbook + Release notes + Comms + Cost/capacity | `06-deployment.md` | Harness / LaunchDarkly / Argo / Pulumi / Vercel / GitHub Actions |
+| **7. Maintenance** | SLOs + Dashboards + Alerting + Runbook + On-call cheat sheet + Postmortem template + Tech-debt watchlist + Capacity trend + Feedback loop | `07-maintenance.md` | Datadog / PagerDuty / Honeycomb / Sentry / Grafana / New Relic |
 
 ## Folder layout
 
 ```
 sevaai-sdlc-toolkit/
 ├── plugin.json                   # marketplace manifest (Claude Code)
-├── .mcp.json                     # bundled MCP servers per stage
+├── .mcp.json                     # 34+ bundled MCP servers per stage
 ├── README.md                     # this file
 ├── skills/                       # 7 stage skills + orchestrator (source of truth)
+│   └── sdlc-<stage>/
+│       ├── SKILL.md              # frontmatter triggers + sub-activities + instructions
+│       └── templates/artifact.md # structured template the skill fills in
 ├── commands/
 │   └── sdlc.md                   # /sdlc slash command
 ├── adapters/                     # generated formats for non-Claude tools
@@ -160,17 +169,31 @@ sevaai-sdlc-toolkit/
 │   ├── gemini-gem/               # paste-as-instructions per stage
 │   └── raw/                      # tool-agnostic prompts
 ├── scripts/
-│   ├── setup-mcps.sh             # CLI installer for the bundled MCPs
+│   ├── setup-mcps.sh             # CLI installer for the bundled MCPs (jq + claude CLI)
 │   └── build-adapters.py         # regenerate adapters from skills/
 ├── examples/
 │   └── sample_feature.md
 └── docs/
-    ├── customization.md
-    ├── mcp-integration.md
-    └── reference-architecture.svg
+    ├── reference-architecture.md # high-level flow + runtime tools
+    ├── reference-architecture.svg
+    ├── sdlc-stages-detail.md     # elaborated sub-activities per stage
+    ├── mcp-integration.md        # which MCPs help which stages
+    ├── mcp-catalog.md            # full categorized MCP list + custom-endpoint guide
+    └── customization.md          # tune for your stack
 ```
 
-Each stage skill is a folder with a `SKILL.md` (instructions for the AI) and a `templates/` directory of artifact templates that the skill fills in.
+Each stage skill is a folder with a `SKILL.md` (instructions for the AI, including a `Sub-activities covered` block that scopes what the artifact must address) and a `templates/` directory of artifact templates that the skill fills in.
+
+## Documentation
+
+| Doc | What's inside |
+|---|---|
+| [docs/reference-architecture.md](docs/reference-architecture.md) | Flow + runtime tools (Glob/Read/Grep/LLM/MCP/Write) + hand-off products |
+| [docs/sdlc-stages-detail.md](docs/sdlc-stages-detail.md) | Every sub-activity each stage's artifact must address |
+| [docs/mcp-catalog.md](docs/mcp-catalog.md) | All 34+ bundled MCPs grouped by stage + how to add your own |
+| [docs/mcp-integration.md](docs/mcp-integration.md) | Which MCPs help which stages and how to roll them out |
+| [docs/customization.md](docs/customization.md) | Tune the skills for your stack and conventions |
+| [adapters/README.md](adapters/README.md) | Per-tool install steps for Cursor, Aider, GPTs, Gems, raw |
 
 ## Customize for your stack
 
