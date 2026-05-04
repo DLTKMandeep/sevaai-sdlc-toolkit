@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# sevaai-sdlc enforcement — local pre-commit warning.
+#
+# Activate in your repo with:
+#   git config core.hooksPath .githooks
+#   chmod +x .githooks/pre-commit
+#
+# This hook only WARNS — it doesn't block. The CI gate is the hard enforcer.
+# The hook just gives developers an early heads-up before they push and get
+# rejected at the PR level.
+
+set -u
+
+branch="$(git symbolic-ref --short HEAD 2>/dev/null || echo "")"
+
+# Derive slug from common prefixes.
+slug="${branch#feature/}"
+slug="${slug#feat/}"
+slug="${slug#fix/}"
+slug="${slug#chore/}"
+slug="${slug#docs/}"
+slug="${slug#hotfix/}"
+
+dossier=".sevaai-sdlc/${slug}"
+
+# Skip on the trunk and on exempt branch types.
+case "$branch" in
+  main|master|develop|"" )            exit 0 ;;
+  docs/*|dependabot/*|renovate/* )    exit 0 ;;
+esac
+
+if [[ ! -d "$dossier" ]]; then
+  printf '\n\033[33m[sevaai-sdlc] Heads up — no dossier at %s yet.\033[0m\n' "$dossier"
+  printf '   The CI gate on PR will require it. Run /sdlc <feature> in Claude\n'
+  printf '   to generate the dossier before you push, or document why this branch\n'
+  printf '   is exempt in the PR description.\n'
+  printf '   (this hook only warns; pass --no-verify to silence)\n\n'
+fi
+
+exit 0

@@ -1,0 +1,80 @@
+name: Require SDLC dossier
+
+# Hard gate. Every PR to main / develop must have a complete sevaai-sdlc dossier
+# under .sevaai-sdlc/<feature-slug>/ matching the branch name.
+#
+# Add this workflow as a REQUIRED check in branch protection so PRs cannot merge
+# without it: Settings -> Branches -> Branch protection -> Require status checks.
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  check-dossier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify dossier exists for this feature
+        id: dossier
+        run: |
+          set -euo pipefail
+          branch="${GITHUB_HEAD_REF}"
+
+          # Derive slug from common branch prefixes.
+          slug="${branch#feature/}"
+          slug="${slug#feat/}"
+          slug="${slug#fix/}"
+          slug="${slug#chore/}"
+          slug="${slug#docs/}"
+          slug="${slug#hotfix/}"
+          dossier=".sevaai-sdlc/${slug}"
+
+          echo "Branch:  $branch"
+          echo "Slug:    $slug"
+          echo "Dossier: $dossier"
+
+          # Exempt categories — docs-only or bot-driven changes don't need a full dossier.
+          if [[ "$branch" == docs/* ]] || [[ "$branch" == dependabot/* ]] || [[ "$branch" == renovate/* ]]; then
+            echo "::notice::Exempt branch type ($branch) — skipping dossier check."
+            exit 0
+          fi
+
+          if [[ ! -d "$dossier" ]]; then
+            echo "::error::Missing SDLC dossier at $dossier"
+            echo ""
+            echo "This PR is blocked because no sevaai-sdlc dossier exists for this feature."
+            echo "Run the SDLC pipeline before reopening:"
+            echo "  /sdlc <feature description>          (full 7 stages)"
+            echo "  or run individual stages by name"
+            exit 1
+          fi
+
+          required=(01-requirements 02-design 03-development 04-testing 05-security 06-deployment)
+          missing=()
+          for f in "${required[@]}"; do
+            if [[ ! -f "$dossier/$f.md" ]]; then
+              missing+=("$f.md")
+            fi
+          done
+
+          if (( ${#missing[@]} > 0 )); then
+            echo "::error::Dossier exists but stages are missing: ${missing[*]}"
+            echo "Run the missing stages and re-push."
+            exit 1
+          fi
+
+          # Stage 5 must not be marked BLOCKING unless an explicit sign-off file exists.
+          if grep -qiE 'Blocking:\s*yes' "$dossier/05-security.md"; then
+            if [[ ! -f "$dossier/05-security-signoff.md" ]]; then
+              echo "::error::Security stage marked BLOCKING and no 05-security-signoff.md present."
+              echo "Either mitigate the HIGH/CRITICAL findings, or attach a written sign-off"
+              echo "from your security lead at $dossier/05-security-signoff.md."
+              exit 1
+            else
+              echo "::warning::Security BLOCKING with attached sign-off — proceeding."
+            fi
+          fi
+
+          echo "::notice::Dossier complete and security non-blocking."

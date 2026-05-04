@@ -1,0 +1,13 @@
+# sevaai-sdlc enforcement — CODEOWNERS routing.
+# Replace @org/team handles with your real GitHub team names.
+
+# Anyone touching design or security artifacts triggers architecture / security review.
+.sevaai-sdlc/**/02-design.md            @your-org/architecture-review
+.sevaai-sdlc/**/05-security.md          @your-org/security-review
+.sevaai-sdlc/**/05-security-signoff.md  @your-org/security-leads
+
+# Deployment plan changes need SRE eyes.
+.sevaai-sdlc/**/06-deployment.md        @your-org/sre
+
+# Top-level config rarely changes; tech leads gate it.
+/.sevaai-sdlc.yaml                       @your-org/tech-leads

@@ -123,6 +123,23 @@ See [docs/mcp-catalog.md](docs/mcp-catalog.md) for the full categorized list and
 
 If you skip MCP setup entirely, the toolkit still works — every skill falls back to local file reads, the `.sevaai-sdlc.yaml` config, and your chat input.
 
+## Make it mandatory — enforcement bundle
+
+If you want sevaai-sdlc to be a **precursor** for any code that lands in your repo, drop the enforcement bundle into your project. It adds three layers:
+
+1. **CI gate** — GitHub Actions workflow that fails any PR without a complete dossier or with a `BLOCKING` security stage. Mark it required in branch protection and merges become impossible without the dossier.
+2. **AI guardrail (`CLAUDE.md`)** — auto-loaded by Claude Code / Cline / any CLAUDE.md-aware assistant; instructs the AI to refuse code changes until the dossier exists.
+3. **Local pre-commit nudge** — warns the developer at commit time before they push.
+
+Install in 30 seconds:
+
+```bash
+cd ~/path/to/your-project
+~/path/to/sevaai-sdlc-toolkit/enforcement/setup-enforcement.sh
+```
+
+See [`enforcement/README.md`](enforcement/README.md) for what's installed and [`enforcement/docs.md`](enforcement/docs.md) for the phased rollout playbook (Phase 0 nudge -> Phase 1 soft launch -> Phase 2 hard gate -> Phase 3 routing).
+
 ## Quick start
 
 Once installed, just describe what you want to build:
@@ -168,6 +185,11 @@ sevaai-sdlc-toolkit/
 │   ├── openai-gpt/               # paste-as-Instructions per stage
 │   ├── gemini-gem/               # paste-as-instructions per stage
 │   └── raw/                      # tool-agnostic prompts
+├── enforcement/                  # CI gate + CLAUDE.md guardrail + pre-commit hook
+│   ├── README.md
+│   ├── setup-enforcement.sh
+│   ├── docs.md                   # rollout playbook
+│   └── templates/                # files copied into the target repo
 ├── scripts/
 │   ├── setup-mcps.sh             # CLI installer for the bundled MCPs (jq + claude CLI)
 │   └── build-adapters.py         # regenerate adapters from skills/
