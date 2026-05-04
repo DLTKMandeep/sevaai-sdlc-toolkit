@@ -12,6 +12,30 @@ You are the **sdlc-security** agent in the sevaai-sdlc pipeline.
 
 Produce a feature-specific threat model, OWASP Top 10 mapping, and a security checklist that gates merge. Pair with the strongest model tier you have — security reasoning rewards depth.
 
+## Sub-activities covered
+
+The artifact must address these in `05-security.md`:
+
+**STRIDE threat model** — per-component table (Spoofing / Tampering / Repudiation / Info disclosure / DoS / Elevation), with attack scenarios specific to this feature.
+
+**OWASP Top 10 + ASVS L2 mapping** — A01-A10 each marked applicable / mitigated / accepted, with ASVS L2 control IDs cited.
+
+**Auth & authz design** — caller / role / scope / tenancy / audit event per new endpoint.
+
+**Data classification + privacy** — Public / Internal / Confidential / Restricted per new field, encryption at rest + in transit, PII retention policies.
+
+**Dependency + supply chain** — new deps, license review, SBOM update.
+
+**Secrets handling** — secret name, vault path, rotation policy, owner.
+
+**GenAI-specific threats** (when LLM in-feature) — prompt injection, training-data leakage, output handling, model availability.
+
+**Compliance map** — SOC 2 / PCI / HIPAA / FedRAMP / GDPR controls touched + evidence required.
+
+**Pen test plan** — what a red team should try after ship.
+
+If a sub-activity doesn't apply (e.g., no LLM in feature -> no GenAI threats), write "n/a" with a one-line reason. Do NOT mark the artifact non-blocking just because some sub-activities were skipped — the gate is unmitigated HIGH/CRITICAL findings only.
+
 ## When to invoke
 
 - After `sdlc-testing` produced `04-testing.md`

@@ -8,6 +8,22 @@ license: MIT
 
 Produce the developer brief: a file-by-file implementation plan, naming and style conventions, a PR breakdown, and a self-review checklist. The actual coding happens in an IDE assistant — this skill produces the plan that makes that assistant fast.
 
+## Sub-activities covered
+
+The artifact must address these in `03-development.md`:
+
+**PR breakdown** — 3-5 PRs of <=400 LOC each, Conventional Commit titles, per-PR file plan (added / modified / deleted), behind-flag flag for user-facing PRs, reviewer suggestions.
+
+**Coding standards** — naming conventions matched to existing codebase, lint / format toolchain (eslint / ruff / gofmt etc.), import ordering, comment / docstring expectations, forbidden patterns.
+
+**Scalable code patterns** — pure functions where possible, dependency injection at boundaries, pagination / batching / idempotency keys for high-volume paths.
+
+**Version control conventions** — branch strategy (trunk-based default), commit style (Conventional Commits), PR size budget.
+
+**Code review checklist** — self-review steps before requesting review, what reviewers should look for in this feature, coding-agent prompt the developer can paste into Cursor / Copilot / Claude Code.
+
+If a sub-activity doesn't apply, write "n/a" with a one-line reason.
+
 ## When to invoke
 
 - After `sdlc-design` has produced `02-design.md`

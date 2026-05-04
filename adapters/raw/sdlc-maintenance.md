@@ -6,6 +6,30 @@
 
 Produce the operations bundle: SLOs/SLIs, dashboards, alerts, runbook, on-call cheat sheet, postmortem template, and tech-debt watchlist. This is what makes the feature operable, not just deployed.
 
+## Sub-activities covered
+
+The artifact must address these in `07-maintenance.md`:
+
+**SLOs and SLIs** — availability, latency p95/p99, error rate, freshness over a 28-day rolling window. Burn-rate alerts (fast / slow).
+
+**Dashboards** — four golden signals (latency / traffic / errors / saturation) plus the business KPI for the feature.
+
+**Alerting** — P1 page / P2 ticket / P3 notify-only routing, alert noise budget (e.g. max 2 pages per shift).
+
+**Runbook** — per failure mode: symptom -> diagnosis -> remediation, with copy-pasteable commands or links.
+
+**On-call cheat sheet** — where logs live, how to roll back, how to kill the flag, escalation owner.
+
+**Postmortem template** — pre-seeded with this feature's context.
+
+**Tech debt watchlist** — items, owner, severity, review-by date.
+
+**Capacity + cost trend** — what to watch, revisit cadence.
+
+**Feedback loop** — user feedback channels (tickets / NPS / in-app surveys), cadence for reviewing feedback against the feature thesis, trigger for deprecation or major iteration.
+
+If a sub-activity doesn't apply, write "n/a" with a one-line reason.
+
 ## When to invoke
 
 - After `sdlc-deployment` produced `06-deployment.md`

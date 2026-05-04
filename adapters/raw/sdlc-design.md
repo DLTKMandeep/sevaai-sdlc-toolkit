@@ -6,6 +6,20 @@
 
 Take the requirements artifact and produce a component design, API contracts, data model, and an ADR documenting the key decision. This is the deepest-reasoning stage; pair with the strongest model tier you have available.
 
+## Sub-activities covered
+
+The artifact must address these in `02-design.md`:
+
+**High-Level Design (HLD)** — system architecture diagram (Mermaid), service boundaries and responsibilities, tech stack decisions, integration points with existing services, system-level data flow.
+
+**Low-Level Design (LLD)** — module / class / package structure, API contracts (OpenAPI), data model (schema additions, indexes, migrations forward + rollback), sequence diagrams for non-trivial flows, configuration / env vars.
+
+**Architecture Decision Record (ADR)** — context, decision, alternatives considered + why rejected, consequences, supersession of prior ADRs if any.
+
+**First-pass threat model** — STRIDE one-liners per component (full review happens in stage 5).
+
+If a sub-activity doesn't apply (e.g., no schema changes -> no migration), write "n/a" with a one-line reason.
+
 ## When to invoke
 
 - After `sdlc-requirements` has produced `01-requirements.md`

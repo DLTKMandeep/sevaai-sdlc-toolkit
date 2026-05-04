@@ -8,6 +8,16 @@ license: MIT
 
 Turn a fuzzy feature description into structured, testable user stories with acceptance criteria, ready to land in Jira / Linear / Notion.
 
+## Sub-activities covered
+
+The artifact must address these in `01-requirements.md`:
+
+**Planning** — define project scope, set objectives + measurable goals, resource planning (people / time / dependencies), timeline + milestones, success metrics (KPIs / OKRs).
+
+**Requirements** — functional requirements as user stories (INVEST + Given-When-Then acceptance), non-functional / technical requirements (performance, scalability, accessibility, i18n), stakeholder review and approval (Definition of Ready), edge cases, explicit out-of-scope, compliance flags (PII / payment / regulated data / WCAG).
+
+If a sub-activity doesn't apply to this feature, write "n/a" in the relevant section with a one-line reason, rather than silently skipping it.
+
 ## When to invoke
 
 - User describes a feature in prose ("we want to add X")

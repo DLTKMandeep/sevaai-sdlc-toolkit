@@ -7,6 +7,28 @@ alwaysApply: false
 
 Produce the rollout plan: environments, CI/CD wiring, feature-flag strategy, canary thresholds, rollback runbook, and release notes. This artifact is what release management approves before production push.
 
+## Sub-activities covered
+
+The artifact must address these in `06-deployment.md`:
+
+**Release planning** — environment promotion path (dev -> staging -> canary -> prod), approver(s) per gate, release window + no-deploy windows, versioning + dependencies on other releases.
+
+**Feature flag plan** — flag name, default state, rollout schedule (e.g. 1% / 1h -> 10% / 4h -> 50% / 8h -> 100%), kill-switch criteria.
+
+**Canary analysis** — SLIs to watch (error rate, p95 latency, saturation, business KPI) and threshold that triggers auto rollback.
+
+**Deployment automation** — CI workflow updates (Actions / GitLab / Jenkins), IaC changes (Terraform / Pulumi / Helm / Argo), DB migration plan (expand-contract).
+
+**Rollback runbook** — copy-pasteable steps, <=2min each.
+
+**Release notes** — user-facing / internal / API / deprecations.
+
+**Stakeholder comms** — audience x channel x timing matrix.
+
+**Cost & capacity check** — QPS / storage / inference-cost delta.
+
+If a sub-activity doesn't apply, write "n/a" with a one-line reason.
+
 ## When to invoke
 
 - After `sdlc-security` produced `05-security.md` (and is non-blocking)

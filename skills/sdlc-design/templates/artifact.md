@@ -9,7 +9,9 @@
 
 What problem this design solves. Quote the requirements.
 
-## 2. Component diagram
+## 2. High-Level Design (HLD)
+
+### 2.1 Component diagram
 
 ```mermaid
 flowchart LR
@@ -19,9 +21,38 @@ flowchart LR
   Service --> Queue[[Kafka]]
 ```
 
-## 3. API contracts
+### 2.2 Service responsibilities
 
-### `POST /v1/{resource}`
+| Service | Responsibility | Owns |
+|---|---|---|
+| API | request validation, auth, response shaping | HTTP boundary |
+| Service | domain logic | core invariants |
+| DB | durable state | tenant data |
+
+### 2.3 Tech stack decisions
+
+Stack choices and why each was selected over alternatives. Reference any ADRs.
+
+### 2.4 Integration points
+
+External systems this design touches (REST / event / direct DB).
+
+## 3. Low-Level Design (LLD)
+
+### 3.1 Module / package structure
+
+```
+src/services/{name}/
+├── service.ts
+├── types.ts
+├── repository.ts
+└── handlers/
+    └── http.ts
+```
+
+### 3.2 API contracts
+
+#### `POST /v1/{resource}`
 
 ```yaml
 summary: Create a {resource}
@@ -38,7 +69,7 @@ responses:
   401: { description: unauthorized }
 ```
 
-## 4. Data model
+### 3.3 Data model
 
 ```sql
 CREATE TABLE example (
@@ -51,7 +82,25 @@ CREATE INDEX example_field_a_idx ON example (field_a);
 
 Include migration plan (forward + rollback).
 
-## 5. ADR — {Title}
+### 3.4 Sequence diagrams
+
+```mermaid
+sequenceDiagram
+  Client->>API: POST /v1/resource
+  API->>Service: createResource(input)
+  Service->>DB: INSERT ...
+  DB-->>Service: row
+  Service-->>API: domain event
+  API-->>Client: 201 Created
+```
+
+### 3.5 Configuration / environment variables
+
+| Variable | Purpose | Default |
+|---|---|---|
+| `{NAME}` | what it controls | none |
+
+## 4. ADR — {Title}
 
 - **Status**: Proposed
 - **Decision**: ...
@@ -60,7 +109,7 @@ Include migration plan (forward + rollback).
   2. {Alt B} — rejected because {reason}
 - **Consequences**: positive / negative / neutral
 
-## 6. First-pass threat model (STRIDE)
+## 5. First-pass threat model (STRIDE)
 
 | Component | Spoofing | Tampering | Repudiation | Info disclosure | DoS | Elevation |
 |---|---|---|---|---|---|---|
@@ -70,10 +119,10 @@ Include migration plan (forward + rollback).
 
 The full review happens in stage 5 (`sdlc-security`).
 
-## 7. Open questions
+## 6. Open questions
 
 - ...
 
-## 8. Hand-off
+## 7. Hand-off
 
 Next stage: **Development** (`sdlc-development`). Artifact: `03-development.md`.

@@ -14,6 +14,28 @@ phrases) in your prompt to invoke that section's behavior.
 
 Produce the rollout plan: environments, CI/CD wiring, feature-flag strategy, canary thresholds, rollback runbook, and release notes. This artifact is what release management approves before production push.
 
+## Sub-activities covered
+
+The artifact must address these in `06-deployment.md`:
+
+**Release planning** — environment promotion path (dev -> staging -> canary -> prod), approver(s) per gate, release window + no-deploy windows, versioning + dependencies on other releases.
+
+**Feature flag plan** — flag name, default state, rollout schedule (e.g. 1% / 1h -> 10% / 4h -> 50% / 8h -> 100%), kill-switch criteria.
+
+**Canary analysis** — SLIs to watch (error rate, p95 latency, saturation, business KPI) and threshold that triggers auto rollback.
+
+**Deployment automation** — CI workflow updates (Actions / GitLab / Jenkins), IaC changes (Terraform / Pulumi / Helm / Argo), DB migration plan (expand-contract).
+
+**Rollback runbook** — copy-pasteable steps, <=2min each.
+
+**Release notes** — user-facing / internal / API / deprecations.
+
+**Stakeholder comms** — audience x channel x timing matrix.
+
+**Cost & capacity check** — QPS / storage / inference-cost delta.
+
+If a sub-activity doesn't apply, write "n/a" with a one-line reason.
+
 ## When to invoke
 
 - After `sdlc-security` produced `05-security.md` (and is non-blocking)
@@ -76,6 +98,20 @@ See `templates/artifact.md`.
 
 Take the requirements artifact and produce a component design, API contracts, data model, and an ADR documenting the key decision. This is the deepest-reasoning stage; pair with the strongest model tier you have available.
 
+## Sub-activities covered
+
+The artifact must address these in `02-design.md`:
+
+**High-Level Design (HLD)** — system architecture diagram (Mermaid), service boundaries and responsibilities, tech stack decisions, integration points with existing services, system-level data flow.
+
+**Low-Level Design (LLD)** — module / class / package structure, API contracts (OpenAPI), data model (schema additions, indexes, migrations forward + rollback), sequence diagrams for non-trivial flows, configuration / env vars.
+
+**Architecture Decision Record (ADR)** — context, decision, alternatives considered + why rejected, consequences, supersession of prior ADRs if any.
+
+**First-pass threat model** — STRIDE one-liners per component (full review happens in stage 5).
+
+If a sub-activity doesn't apply (e.g., no schema changes -> no migration), write "n/a" with a one-line reason.
+
 ## When to invoke
 
 - After `sdlc-requirements` has produced `01-requirements.md`
@@ -137,6 +173,22 @@ See `templates/artifact.md`.
 
 Produce the developer brief: a file-by-file implementation plan, naming and style conventions, a PR breakdown, and a self-review checklist. The actual coding happens in an IDE assistant — this skill produces the plan that makes that assistant fast.
 
+## Sub-activities covered
+
+The artifact must address these in `03-development.md`:
+
+**PR breakdown** — 3-5 PRs of <=400 LOC each, Conventional Commit titles, per-PR file plan (added / modified / deleted), behind-flag flag for user-facing PRs, reviewer suggestions.
+
+**Coding standards** — naming conventions matched to existing codebase, lint / format toolchain (eslint / ruff / gofmt etc.), import ordering, comment / docstring expectations, forbidden patterns.
+
+**Scalable code patterns** — pure functions where possible, dependency injection at boundaries, pagination / batching / idempotency keys for high-volume paths.
+
+**Version control conventions** — branch strategy (trunk-based default), commit style (Conventional Commits), PR size budget.
+
+**Code review checklist** — self-review steps before requesting review, what reviewers should look for in this feature, coding-agent prompt the developer can paste into Cursor / Copilot / Claude Code.
+
+If a sub-activity doesn't apply, write "n/a" with a one-line reason.
+
 ## When to invoke
 
 - After `sdlc-design` has produced `02-design.md`
@@ -197,6 +249,30 @@ See `templates/artifact.md`.
 # SDLC Stage 7 — Maintenance & Optimization
 
 Produce the operations bundle: SLOs/SLIs, dashboards, alerts, runbook, on-call cheat sheet, postmortem template, and tech-debt watchlist. This is what makes the feature operable, not just deployed.
+
+## Sub-activities covered
+
+The artifact must address these in `07-maintenance.md`:
+
+**SLOs and SLIs** — availability, latency p95/p99, error rate, freshness over a 28-day rolling window. Burn-rate alerts (fast / slow).
+
+**Dashboards** — four golden signals (latency / traffic / errors / saturation) plus the business KPI for the feature.
+
+**Alerting** — P1 page / P2 ticket / P3 notify-only routing, alert noise budget (e.g. max 2 pages per shift).
+
+**Runbook** — per failure mode: symptom -> diagnosis -> remediation, with copy-pasteable commands or links.
+
+**On-call cheat sheet** — where logs live, how to roll back, how to kill the flag, escalation owner.
+
+**Postmortem template** — pre-seeded with this feature's context.
+
+**Tech debt watchlist** — items, owner, severity, review-by date.
+
+**Capacity + cost trend** — what to watch, revisit cadence.
+
+**Feedback loop** — user feedback channels (tickets / NPS / in-app surveys), cadence for reviewing feedback against the feature thesis, trigger for deprecation or major iteration.
+
+If a sub-activity doesn't apply, write "n/a" with a one-line reason.
 
 ## When to invoke
 
@@ -343,6 +419,16 @@ This orchestrator is the AI analog of a delivery lead walking a feature from int
 
 Turn a fuzzy feature description into structured, testable user stories with acceptance criteria, ready to land in Jira / Linear / Notion.
 
+## Sub-activities covered
+
+The artifact must address these in `01-requirements.md`:
+
+**Planning** — define project scope, set objectives + measurable goals, resource planning (people / time / dependencies), timeline + milestones, success metrics (KPIs / OKRs).
+
+**Requirements** — functional requirements as user stories (INVEST + Given-When-Then acceptance), non-functional / technical requirements (performance, scalability, accessibility, i18n), stakeholder review and approval (Definition of Ready), edge cases, explicit out-of-scope, compliance flags (PII / payment / regulated data / WCAG).
+
+If a sub-activity doesn't apply to this feature, write "n/a" in the relevant section with a one-line reason, rather than silently skipping it.
+
 ## When to invoke
 
 - User describes a feature in prose ("we want to add X")
@@ -405,6 +491,30 @@ See `templates/artifact.md` for the output format.
 # SDLC Stage 5 — Security
 
 Produce a feature-specific threat model, OWASP Top 10 mapping, and a security checklist that gates merge. Pair with the strongest model tier you have — security reasoning rewards depth.
+
+## Sub-activities covered
+
+The artifact must address these in `05-security.md`:
+
+**STRIDE threat model** — per-component table (Spoofing / Tampering / Repudiation / Info disclosure / DoS / Elevation), with attack scenarios specific to this feature.
+
+**OWASP Top 10 + ASVS L2 mapping** — A01-A10 each marked applicable / mitigated / accepted, with ASVS L2 control IDs cited.
+
+**Auth & authz design** — caller / role / scope / tenancy / audit event per new endpoint.
+
+**Data classification + privacy** — Public / Internal / Confidential / Restricted per new field, encryption at rest + in transit, PII retention policies.
+
+**Dependency + supply chain** — new deps, license review, SBOM update.
+
+**Secrets handling** — secret name, vault path, rotation policy, owner.
+
+**GenAI-specific threats** (when LLM in-feature) — prompt injection, training-data leakage, output handling, model availability.
+
+**Compliance map** — SOC 2 / PCI / HIPAA / FedRAMP / GDPR controls touched + evidence required.
+
+**Pen test plan** — what a red team should try after ship.
+
+If a sub-activity doesn't apply (e.g., no LLM in feature -> no GenAI threats), write "n/a" with a one-line reason. Do NOT mark the artifact non-blocking just because some sub-activities were skipped — the gate is unmitigated HIGH/CRITICAL findings only.
 
 ## When to invoke
 
@@ -472,6 +582,22 @@ See `templates/artifact.md`.
 # SDLC Stage 4 — Testing
 
 Produce a test plan and stubs that match the design and the development plan. Cover the pyramid (unit -> integration -> e2e -> exploratory) with explicit ratios, name the gaps, and list the edge cases the LLM thinks the design missed.
+
+## Sub-activities covered
+
+The artifact must address these in `04-testing.md`:
+
+**Test pyramid** — counts and locations for unit / integration / e2e / exploratory tests, coverage target on changed code, test runner config alignment.
+
+**System testing** — end-to-end happy paths, cross-system contract tests, migration applies cleanly to prod-schema copy.
+
+**Manual testing** — exploratory test charters (30-60 min), accessibility / a11y manual sweep, cross-browser / cross-device matrix.
+
+**Automated testing** — unit-test stubs in the project's framework, self-healing UI (Mabl / Testim), visual regression (Applitools / Percy), contract tests (Pact / Postman) for cross-team APIs, performance plan (k6 / Gatling) for high-volume paths.
+
+**Test data + flake budget** — synthetic data strategy (Tonic.ai / Mockaroo + AI), recorded prod traffic (Keploy) where useful, flaky-test policy (triage SLA, quarantine rules).
+
+If a sub-activity doesn't apply, write "n/a" with a one-line reason.
 
 ## When to invoke
 

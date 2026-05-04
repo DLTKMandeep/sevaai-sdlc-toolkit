@@ -82,6 +82,19 @@ Saved as: `dashboards/{feature-slug}.json` (Grafana / Datadog).
 - **Watch**: storage growth rate, peak QPS at 14:00 UTC, model inference cost if applicable
 - **Revisit**: monthly for 3 months, then quarterly
 
-## 9. Sign-off
+## 9. Feedback loop
+
+| Channel | Cadence | Owner |
+|---|---|---|
+| Support tickets | weekly review | CS lead |
+| In-app NPS | monthly | PM |
+| In-app surveys | post-launch +30/+90 days | PM |
+| Power-user interviews | quarterly | PM + design |
+
+**Trigger for major iteration** — describe the metric / feedback pattern that would prompt a revisit (e.g., "if NPS for this surface drops below 30 we re-evaluate the design choice in ADR-NN").
+
+**Trigger for deprecation** — describe what would prompt sunsetting (e.g., "if monthly active users on this feature is < 5% of eligible cohort after 6 months, propose deprecation").
+
+## 10. Sign-off
 
 This artifact closes the SDLC for `{feature-slug}`. Feature dossier consolidated under `.sevaai-sdlc/{feature-slug}/`.

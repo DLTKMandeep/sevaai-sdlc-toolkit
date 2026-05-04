@@ -6,6 +6,22 @@
 
 Produce a test plan and stubs that match the design and the development plan. Cover the pyramid (unit -> integration -> e2e -> exploratory) with explicit ratios, name the gaps, and list the edge cases the LLM thinks the design missed.
 
+## Sub-activities covered
+
+The artifact must address these in `04-testing.md`:
+
+**Test pyramid** — counts and locations for unit / integration / e2e / exploratory tests, coverage target on changed code, test runner config alignment.
+
+**System testing** — end-to-end happy paths, cross-system contract tests, migration applies cleanly to prod-schema copy.
+
+**Manual testing** — exploratory test charters (30-60 min), accessibility / a11y manual sweep, cross-browser / cross-device matrix.
+
+**Automated testing** — unit-test stubs in the project's framework, self-healing UI (Mabl / Testim), visual regression (Applitools / Percy), contract tests (Pact / Postman) for cross-team APIs, performance plan (k6 / Gatling) for high-volume paths.
+
+**Test data + flake budget** — synthetic data strategy (Tonic.ai / Mockaroo + AI), recorded prod traffic (Keploy) where useful, flaky-test policy (triage SLA, quarantine rules).
+
+If a sub-activity doesn't apply, write "n/a" with a one-line reason.
+
 ## When to invoke
 
 - After `sdlc-development` produced `03-development.md`
