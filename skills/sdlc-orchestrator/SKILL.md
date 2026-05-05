@@ -16,10 +16,16 @@ Runs all seven SDLC stages in order against a single feature and consolidates th
 
 ## What to do
 
-1. **Slugify the feature.** Take the feature description, derive a slug like `add-saml-sso`. If the user provides one, use it.
-2. **Create the dossier folder** `docs/sdlc/{feature-slug}/` in the project root. If the project root has a `.sevaai-sdlc.yaml` config that overrides `output_dir`, honor it.
-3. **Write the dossier index** `docs/sdlc/{feature-slug}/00-index.md` with the feature description, target stages, and links to each stage's artifact (initially as `(pending)`).
-4. **Run stages in order**, invoking each skill via its `name` and passing the prior artifact:
+1. **Detect greenfield first.** Before slugifying anything, check whether the project has been bootstrapped:
+   - If neither `.sevaai-sdlc.yaml` nor `docs/architecture.md` exists in the project root, the project is greenfield.
+   - Stop, surface this to the user, and offer to run the `sdlc-init` skill first: "This project hasn't been bootstrapped yet — run Stage 0 (`sdlc-init`) before the feature SDLC? (Y/n)"
+   - If the user accepts, hand off to `sdlc-init` and resume the orchestrator at step 2 only after Stage 0 produces `docs/sdlc/_bootstrap/00-bootstrap.md` and `.sevaai-sdlc.yaml`.
+   - If the user explicitly skips, proceed without bootstrap context but warn that grounding will be weak.
+2. **Slugify the feature.** Take the feature description, derive a slug like `add-saml-sso`. If the user provides one, use it.
+3. **Create the dossier folder** `docs/sdlc/{feature-slug}/` in the project root. If the project root has a `.sevaai-sdlc.yaml` config that overrides `output_dir`, honor it.
+4. **Write the dossier index** `docs/sdlc/{feature-slug}/00-index.md` with the feature description, target stages, and links to each stage's artifact (initially as `(pending)`).
+5. **Run stages in order**, invoking each skill via its `name` and passing the prior artifact:
+   - `sdlc-init`          ->  `docs/sdlc/_bootstrap/00-bootstrap.md` (greenfield only — runs before any feature)
    - `sdlc-requirements`  ->  `01-requirements.md`
    - `sdlc-design`        ->  `02-design.md`
    - `sdlc-development`   ->  `03-development.md`
@@ -27,9 +33,9 @@ Runs all seven SDLC stages in order against a single feature and consolidates th
    - `sdlc-security`      ->  `05-security.md`
    - `sdlc-deployment`    ->  `06-deployment.md`
    - `sdlc-maintenance`   ->  `07-maintenance.md`
-5. **Halt on blocking security findings.** If `sdlc-security` marks the artifact `BLOCKING: yes`, stop the pipeline, surface the findings to the user, and ask whether to override or remediate before continuing.
-6. **Update the index** after each stage so the user sees progress.
-7. **At the end**, summarize the dossier in chat: feature, 7 artifact links, top 3 risks called out across stages, top 3 follow-ups.
+6. **Halt on blocking security findings.** If `sdlc-security` marks the artifact `BLOCKING: yes`, stop the pipeline, surface the findings to the user, and ask whether to override or remediate before continuing.
+7. **Update the index** after each stage so the user sees progress.
+8. **At the end**, summarize the dossier in chat: feature, 7 artifact links, top 3 risks called out across stages, top 3 follow-ups.
 
 ## Output: dossier structure
 

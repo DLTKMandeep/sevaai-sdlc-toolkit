@@ -11,7 +11,7 @@ claude plugin install sevaai-sdlc
 
 # 2. confirm it's registered
 claude plugin list                    # expect to see "sevaai-sdlc"
-claude skill list | grep sdlc         # expect 8 sdlc-* skills
+claude skill list | grep sdlc         # expect 9 sdlc-* skills (init + orchestrator + 7 stages)
 
 # 3. (optional) install the MCPs you want — minimal set:
 cd ~/path/to/sevaai-sdlc-toolkit
@@ -27,16 +27,24 @@ If you're driving from Cowork, the install step is the in-app `/plugin install` 
 
 ```
 project root
-├── docs/sdlc/
-│   └── <feature-slug>/
-│       ├── 00-index.md              # you maintain this manually OR orchestrator writes it
-│       ├── 01-requirements.md
-│       ├── 02-design.md
-│       ├── 03-development.md
-│       ├── 04-testing.md
-│       ├── 05-security.md
-│       └── 06-deployment.md
+├── .sevaai-sdlc.yaml               # Stage 0 writes this for greenfield projects
+├── docs/
+│   ├── architecture.md             # Stage 0 writes this for greenfield projects
+│   ├── adr/                        # Stage 0 writes the foundational ADRs
+│   └── sdlc/
+│       ├── _bootstrap/
+│       │   └── 00-bootstrap.md     # Stage 0 artifact (greenfield only)
+│       └── <feature-slug>/
+│           ├── 00-index.md         # you maintain this manually OR orchestrator writes it
+│           ├── 01-requirements.md
+│           ├── 02-design.md
+│           ├── 03-development.md
+│           ├── 04-testing.md
+│           ├── 05-security.md
+│           └── 06-deployment.md
 ```
+
+Stage 0 only runs once per project, on greenfield bootstrap. If `.sevaai-sdlc.yaml` and `docs/architecture.md` already exist, skip straight to Stage 1.
 
 ## Stage 1 — Requirements
 

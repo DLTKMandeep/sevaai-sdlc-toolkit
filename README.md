@@ -5,7 +5,12 @@
 
 **Automated, AI-powered Software Development Lifecycle for any codebase, in any AI tool.**
 
-Drop this plugin into your AI assistant and get seven composable skills that walk a feature from idea to operations: Requirements -> Design -> Development -> Testing -> Security -> Deployment -> Maintenance. Each skill is self-contained, references the real-world tools you already use (Jira, Snyk, Datadog, Harness, etc.), and produces ship-ready markdown artifacts.
+Drop this plugin into your AI assistant and get composable skills that walk a project from zero through operations:
+
+**Stage 0 (greenfield only)** — Project bootstrap: vision, architecture, ADRs, repo skeleton.
+**Stages 1-7 (per feature)** — Requirements → Design → Development → Testing → Security → Deployment → Maintenance.
+
+Each skill is self-contained, references the real-world tools you already use (Jira, Snyk, Datadog, Harness, etc.), and produces ship-ready markdown artifacts. Use Stage 0 when starting a brand-new project; jump straight to Stage 1 when adding a feature to an existing codebase.
 
 ### Works with
 
@@ -16,10 +21,12 @@ Drop this plugin into your AI assistant and get seven composable skills that wal
 The skills are markdown — they work anywhere you can set custom instructions. See [`adapters/`](adapters/) for ready-to-paste configs per tool.
 
 ```
-+-------------+   +--------+   +-------------+   +---------+   +----------+   +------------+   +-------------+
-| Requirements |->| Design |->| Development |->| Testing |->| Security |->| Deployment |->| Maintenance |
-+-------------+   +--------+   +-------------+   +---------+   +----------+   +------------+   +-------------+
-        ^----------------------------- /sdlc orchestrator ------------------------------------^
++-----------+    +-------------+   +--------+   +-------------+   +---------+   +----------+   +------------+   +-------------+
+| Bootstrap | -> | Requirements |->| Design |->| Development |->| Testing |->| Security |->| Deployment |->| Maintenance |
++-----------+    +-------------+   +--------+   +-------------+   +---------+   +----------+   +------------+   +-------------+
+  Stage 0          ^------------------------------- /sdlc orchestrator (Stages 1-7) -----------------------------------^
+  greenfield
+  only
 ```
 
 > See [docs/reference-architecture.md](docs/reference-architecture.md) for the full reference architecture diagram showing flow, runtime tools (Glob / Read / Grep / LLM / MCP / Write), and per-stage hand-off to real-world products. See [docs/sdlc-stages-detail.md](docs/sdlc-stages-detail.md) for the elaborate per-stage breakdown — every sub-activity each stage's artifact must address (Planning, HLD/LLD, System/Manual/Automated Testing, STRIDE/OWASP/Compliance, Feedback Loop, etc.).
