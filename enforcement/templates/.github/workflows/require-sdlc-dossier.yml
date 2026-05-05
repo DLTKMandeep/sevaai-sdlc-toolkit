@@ -1,7 +1,7 @@
 name: Require SDLC dossier
 
 # Hard gate. Every PR to main / develop must have a complete sevaai-sdlc dossier
-# under .sevaai-sdlc/<feature-slug>/ matching the branch name.
+# under docs/sdlc/<feature-slug>/ matching the branch name.
 #
 # Add this workflow as a REQUIRED check in branch protection so PRs cannot merge
 # without it: Settings -> Branches -> Branch protection -> Require status checks.
@@ -29,7 +29,7 @@ jobs:
           slug="${slug#chore/}"
           slug="${slug#docs/}"
           slug="${slug#hotfix/}"
-          dossier=".sevaai-sdlc/${slug}"
+          dossier="docs/sdlc/${slug}"
 
           echo "Branch:  $branch"
           echo "Slug:    $slug"

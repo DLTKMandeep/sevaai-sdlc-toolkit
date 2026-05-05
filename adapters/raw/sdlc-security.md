@@ -55,7 +55,7 @@ If a sub-activity doesn't apply (e.g., no LLM in feature -> no GenAI threats), w
 7. **GenAI-specific threats** if the feature uses an LLM: prompt injection, training-data leakage, jailbreak, output-handling, model availability.
 8. **Compliance map** — if the project's `.sevaai-sdlc.yaml` declares SOC 2 / PCI / HIPAA / FedRAMP / GDPR, walk the relevant controls and produce evidence requirements.
 9. **Pen test plan** — what should a red team try once the feature ships.
-10. **Write artifact** to `.sevaai-sdlc/{feature-slug}/05-security.md` using `templates/artifact.md`. Mark the artifact `BLOCKING` if any HIGH-severity threat is unmitigated.
+10. **Write artifact** to `docs/sdlc/{feature-slug}/05-security.md` using `templates/artifact.md`. Mark the artifact `BLOCKING` if any HIGH-severity threat is unmitigated.
 
 ## Real-world products this skill complements
 

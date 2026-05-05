@@ -8,12 +8,12 @@ What this PR does and why.
 
 This PR will be blocked by CI if the dossier is missing.
 
-- [ ] `.sevaai-sdlc/<slug>/01-requirements.md` reviewed by PM
-- [ ] `.sevaai-sdlc/<slug>/02-design.md` reviewed by tech lead
-- [ ] `.sevaai-sdlc/<slug>/03-development.md` matches what's actually in this PR
-- [ ] `.sevaai-sdlc/<slug>/04-testing.md` reflects the test changes in this PR
-- [ ] `.sevaai-sdlc/<slug>/05-security.md` is `BLOCKING: no` (or has signed-off `05-security-signoff.md`)
-- [ ] `.sevaai-sdlc/<slug>/06-deployment.md` reviewed by SRE / release lead
+- [ ] `docs/sdlc/<slug>/01-requirements.md` reviewed by PM
+- [ ] `docs/sdlc/<slug>/02-design.md` reviewed by tech lead
+- [ ] `docs/sdlc/<slug>/03-development.md` matches what's actually in this PR
+- [ ] `docs/sdlc/<slug>/04-testing.md` reflects the test changes in this PR
+- [ ] `docs/sdlc/<slug>/05-security.md` is `BLOCKING: no` (or has signed-off `05-security-signoff.md`)
+- [ ] `docs/sdlc/<slug>/06-deployment.md` reviewed by SRE / release lead
 
 ## Affected stages of the SDLC
 

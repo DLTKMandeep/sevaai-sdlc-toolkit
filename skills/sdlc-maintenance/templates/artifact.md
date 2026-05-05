@@ -97,4 +97,4 @@ Saved as: `dashboards/{feature-slug}.json` (Grafana / Datadog).
 
 ## 10. Sign-off
 
-This artifact closes the SDLC for `{feature-slug}`. Feature dossier consolidated under `.sevaai-sdlc/{feature-slug}/`.
+This artifact closes the SDLC for `{feature-slug}`. Feature dossier consolidated under `docs/sdlc/{feature-slug}/`.

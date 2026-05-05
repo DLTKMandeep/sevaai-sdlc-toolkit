@@ -51,7 +51,7 @@ If the requirements artifact is missing, ask the user to run `sdlc-requirements`
    - **ADR** — context, decision, alternatives considered, consequences, supersedes (if any)
 4. **First-pass threat model.** STRIDE one-liners per component. The full security review is `sdlc-security`'s job; here you just flag.
 5. **Trade-offs.** Explicitly list two alternatives you considered and why you didn't pick them.
-6. **Write artifact** to `.sevaai-sdlc/{feature-slug}/02-design.md` using `templates/artifact.md`.
+6. **Write artifact** to `docs/sdlc/{feature-slug}/02-design.md` using `templates/artifact.md`.
 
 ## Real-world products this skill complements
 

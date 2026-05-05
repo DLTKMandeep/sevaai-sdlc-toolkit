@@ -27,7 +27,7 @@ If you're driving from Cowork, the install step is the in-app `/plugin install` 
 
 ```
 project root
-├── .sevaai-sdlc/
+├── docs/sdlc/
 │   └── <feature-slug>/
 │       ├── 00-index.md              # you maintain this manually OR orchestrator writes it
 │       ├── 01-requirements.md
@@ -45,7 +45,7 @@ project root
 ```
 Generate the requirements artifact for adding "<feature description in 1-2 sentences>".
 Slug: <feature-slug>
-Write it to .sevaai-sdlc/<feature-slug>/01-requirements.md
+Write it to docs/sdlc/<feature-slug>/01-requirements.md
 ```
 
 **Expected outputs**
@@ -66,7 +66,7 @@ Write it to .sevaai-sdlc/<feature-slug>/01-requirements.md
 ```
 Generate the design artifact for the <feature-slug> feature.
 Read 01-requirements.md as input.
-Write to .sevaai-sdlc/<feature-slug>/02-design.md
+Write to docs/sdlc/<feature-slug>/02-design.md
 ```
 
 **Expected outputs**
@@ -88,7 +88,7 @@ Write to .sevaai-sdlc/<feature-slug>/02-design.md
 ```
 Generate the development plan for the <feature-slug> feature.
 Read 02-design.md as input.
-Write to .sevaai-sdlc/<feature-slug>/03-development.md
+Write to docs/sdlc/<feature-slug>/03-development.md
 ```
 
 **Expected outputs**
@@ -110,7 +110,7 @@ Write to .sevaai-sdlc/<feature-slug>/03-development.md
 ```
 Generate the test plan for the <feature-slug> feature.
 Read 02-design.md and 03-development.md as input.
-Write to .sevaai-sdlc/<feature-slug>/04-testing.md
+Write to docs/sdlc/<feature-slug>/04-testing.md
 ```
 
 **Expected outputs**
@@ -133,7 +133,7 @@ This is the one stage that may BLOCK the pipeline.
 ```
 Generate the security review for the <feature-slug> feature.
 Read 02-design.md and 04-testing.md as input.
-Write to .sevaai-sdlc/<feature-slug>/05-security.md
+Write to docs/sdlc/<feature-slug>/05-security.md
 Use the deepest model tier available — security reasoning rewards depth.
 ```
 
@@ -162,7 +162,7 @@ Use the deepest model tier available — security reasoning rewards depth.
 Generate the deployment plan for the <feature-slug> feature.
 Read 02-design.md, 03-development.md, and 05-security.md as input.
 Stop if 05-security.md is BLOCKING.
-Write to .sevaai-sdlc/<feature-slug>/06-deployment.md
+Write to docs/sdlc/<feature-slug>/06-deployment.md
 ```
 
 **Expected outputs**
@@ -185,11 +185,11 @@ Write to .sevaai-sdlc/<feature-slug>/06-deployment.md
 
 ```bash
 # review the dossier
-ls -la .sevaai-sdlc/<feature-slug>/
-cat .sevaai-sdlc/<feature-slug>/00-index.md
+ls -la docs/sdlc/<feature-slug>/
+cat docs/sdlc/<feature-slug>/00-index.md
 
 # if you want a single combined view
-cat .sevaai-sdlc/<feature-slug>/0*.md > /tmp/dossier.md
+cat docs/sdlc/<feature-slug>/0*.md > /tmp/dossier.md
 less /tmp/dossier.md
 ```
 
@@ -207,7 +207,7 @@ less /tmp/dossier.md
 | Wrong skill fires | use the explicit name: "Use the sdlc-design skill to generate ..." |
 | Artifact is generic | confirm you ran from project root with README + `docs/` present |
 | Stage 5 marks BLOCKING | open the artifact's "Sign-off" table; either mitigate or get sign-off, then re-run |
-| Files written outside project | the `.sevaai-sdlc.yaml` `output_dir` may not be set; default is `.sevaai-sdlc/` |
+| Files written outside project | the `.sevaai-sdlc.yaml` `output_dir` may not be set; default is `docs/sdlc/` |
 | Skill ignores `.sevaai-sdlc.yaml` | confirm the file is at the project root, not buried in a subfolder |
 
 ## Recommended cadence

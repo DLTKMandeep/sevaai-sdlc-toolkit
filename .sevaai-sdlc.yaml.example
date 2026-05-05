@@ -1,0 +1,41 @@
+# .sevaai-sdlc.yaml — copy to your project root and edit.
+# Every value here has a sensible default; only override what matters.
+
+project_name: my-product
+
+# Where the toolkit writes generated artifacts (relative to project root).
+# Default is visible (under docs/) so it shows up in Finder and gets PR-reviewed.
+output_dir: docs/sdlc
+
+# Push artifacts to your real tooling. Each block is OPT-IN; the skill asks
+# before pushing on each run. Set enabled=false to disable.
+trackers:
+  jira:
+    enabled: false                  # flip to true once Atlassian Rovo MCP is connected
+    project_key: ABC                # your Jira project key
+    epic_issue_type: Epic
+    story_issue_type: Story
+    confluence_space: ""            # for ADR / PRD pages (optional)
+  notion:
+    enabled: false
+    prds_database_id: ""
+  github:
+    enabled: false
+    issues_repo: ""                 # e.g., "your-org/your-repo"
+
+# Project context — free-text, injected into every system prompt.
+# Use this to anchor the AI to your domain, stack, conventions, compliance reqs.
+project_context: |
+  Replace this block with a 3-6 sentence description of the codebase, target
+  users, runtime, deployment target, and any non-negotiables (security
+  frameworks, regulatory requirements, supported platforms, etc.).
+
+# Per-stage overrides — leave empty to inherit defaults.
+stages:
+  requirements: {}
+  design:       {}
+  development:  {}
+  testing:      {}
+  security:     {}
+  deployment:   {}
+  maintenance:  {}

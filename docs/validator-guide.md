@@ -10,7 +10,7 @@ Before you can validate anything, you need:
 - [ ] The skills installed in a way the assistant picks them up (one of the install paths from the main README, or the symlink fallback).
 - [ ] A target project with at least a `README.md` and `docs/architecture.md` (Aurora at `~/claude_cowork/aurora-product/` is a ready-made one).
 - [ ] A `.sevaai-sdlc.yaml` at the project root (Aurora has one).
-- [ ] **Optional**: the reference dossier at `~/claude_cowork/aurora-product/.sevaai-sdlc/bulk-csv-import/` to compare your output against.
+- [ ] **Optional**: the reference dossier at `~/claude_cowork/aurora-product/docs/sdlc/bulk-csv-import/` to compare your output against.
 
 ## Pick a validation feature
 
@@ -31,35 +31,35 @@ Open your AI assistant in the project folder. For each stage, paste the trigger 
 ```
 Generate the requirements artifact for "<your feature description>".
 Slug: <your-slug>
-Write to .sevaai-sdlc/<your-slug>/01-requirements.md
+Write to docs/sdlc/<your-slug>/01-requirements.md
 ```
 
 ### Stage 2 — Design
 ```
 Generate the design artifact for the <your-slug> feature.
-Read .sevaai-sdlc/<your-slug>/01-requirements.md as input.
-Write to .sevaai-sdlc/<your-slug>/02-design.md
+Read docs/sdlc/<your-slug>/01-requirements.md as input.
+Write to docs/sdlc/<your-slug>/02-design.md
 ```
 
 ### Stage 3 — Development
 ```
 Generate the development plan for the <your-slug> feature.
 Read 02-design.md as input.
-Write to .sevaai-sdlc/<your-slug>/03-development.md
+Write to docs/sdlc/<your-slug>/03-development.md
 ```
 
 ### Stage 4 — Testing
 ```
 Generate the test plan for the <your-slug> feature.
 Read 02-design.md and 03-development.md as input.
-Write to .sevaai-sdlc/<your-slug>/04-testing.md
+Write to docs/sdlc/<your-slug>/04-testing.md
 ```
 
 ### Stage 5 — Security
 ```
 Generate the security review for the <your-slug> feature.
 Read 02-design.md and 04-testing.md as input.
-Write to .sevaai-sdlc/<your-slug>/05-security.md
+Write to docs/sdlc/<your-slug>/05-security.md
 Use the deepest model tier available.
 ```
 
@@ -68,7 +68,7 @@ Use the deepest model tier available.
 Generate the deployment plan for the <your-slug> feature.
 Read 02-design.md, 03-development.md, and 05-security.md as input.
 Stop if 05-security.md is BLOCKING.
-Write to .sevaai-sdlc/<your-slug>/06-deployment.md
+Write to docs/sdlc/<your-slug>/06-deployment.md
 ```
 
 ## Validation rubric — grade each artifact
@@ -141,7 +141,7 @@ After each stage runs, open the new file and check it against this rubric. Score
 
 ## Compare to the reference
 
-If you ran on Aurora, your dossier should look broadly similar in shape and concreteness to the reference at `.sevaai-sdlc/bulk-csv-import/`. Differences that are FINE:
+If you ran on Aurora, your dossier should look broadly similar in shape and concreteness to the reference at `docs/sdlc/bulk-csv-import/`. Differences that are FINE:
 
 - Different feature -> different content. Obviously.
 - Different LLM model picks slightly different phrasing.
@@ -156,7 +156,7 @@ Differences that are CONCERNING:
 ## After validation — tell the team
 
 If validation passes:
-- Commit the dossier (`git add .sevaai-sdlc/<your-slug>/ && git commit`).
+- Commit the dossier (`git add docs/sdlc/<your-slug>/ && git commit`).
 - Roll the toolkit out to your team using the main README's install paths.
 - Enable the enforcement bundle (see `enforcement/README.md`) when you're ready to make dossiers mandatory.
 

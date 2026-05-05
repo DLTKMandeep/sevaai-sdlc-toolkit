@@ -44,7 +44,7 @@ If a sub-activity doesn't apply, write "n/a" with a one-line reason.
 5. **Plan exploratory test charters** for areas hard to automate (UX, ambiguity, surprising states).
 6. **Name the test data strategy.** Synthetic via Tonic.ai? Recorded production traffic via Keploy? Hand-crafted fixtures?
 7. **Plan flaky-test budget.** What's acceptable, who triages, how long can a flake live before quarantine.
-8. **Write artifact** to `.sevaai-sdlc/{feature-slug}/04-testing.md` using `templates/artifact.md`.
+8. **Write artifact** to `docs/sdlc/{feature-slug}/04-testing.md` using `templates/artifact.md`.
 
 ## Real-world products this skill complements
 

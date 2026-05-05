@@ -9,7 +9,7 @@ Before you write or modify ANY code in this repository:
 
 1. Identify the feature slug. It usually matches the current git branch
    (e.g., branch `feature/add-saml-sso` -> slug `add-saml-sso`).
-2. Check that `.sevaai-sdlc/<slug>/` exists and contains all six stage artifacts:
+2. Check that `docs/sdlc/<slug>/` exists and contains all six stage artifacts:
    `01-requirements.md`, `02-design.md`, `03-development.md`, `04-testing.md`,
    `05-security.md`, `06-deployment.md`.
 3. If the dossier is incomplete, **REFUSE to write or modify code**. Instead,

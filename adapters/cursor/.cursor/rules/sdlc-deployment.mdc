@@ -53,7 +53,7 @@ If a sub-activity doesn't apply, write "n/a" with a one-line reason.
 6. **Release notes.** User-facing changes, internal-team changes, API changes, deprecations.
 7. **Stakeholder comms.** Who's notified, when, in what channel (Slack #releases, email to support, status-page entry if customer-facing).
 8. **Cost & capacity check.** Will this change peak QPS, storage, egress, model-inference cost? Note expected delta.
-9. **Write artifact** to `.sevaai-sdlc/{feature-slug}/06-deployment.md` using `templates/artifact.md`.
+9. **Write artifact** to `docs/sdlc/{feature-slug}/06-deployment.md` using `templates/artifact.md`.
 
 ## Real-world products this skill complements
 

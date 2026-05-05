@@ -60,7 +60,7 @@ If a sub-activity doesn't apply, write "n/a" with a one-line reason.
 6. **Release notes.** User-facing changes, internal-team changes, API changes, deprecations.
 7. **Stakeholder comms.** Who's notified, when, in what channel (Slack #releases, email to support, status-page entry if customer-facing).
 8. **Cost & capacity check.** Will this change peak QPS, storage, egress, model-inference cost? Note expected delta.
-9. **Write artifact** to `.sevaai-sdlc/{feature-slug}/06-deployment.md` using `templates/artifact.md`.
+9. **Write artifact** to `docs/sdlc/{feature-slug}/06-deployment.md` using `templates/artifact.md`.
 
 ## Real-world products this skill complements
 
@@ -137,7 +137,7 @@ If the requirements artifact is missing, ask the user to run `sdlc-requirements`
    - **ADR** — context, decision, alternatives considered, consequences, supersedes (if any)
 4. **First-pass threat model.** STRIDE one-liners per component. The full security review is `sdlc-security`'s job; here you just flag.
 5. **Trade-offs.** Explicitly list two alternatives you considered and why you didn't pick them.
-6. **Write artifact** to `.sevaai-sdlc/{feature-slug}/02-design.md` using `templates/artifact.md`.
+6. **Write artifact** to `docs/sdlc/{feature-slug}/02-design.md` using `templates/artifact.md`.
 
 ## Real-world products this skill complements
 
@@ -213,7 +213,7 @@ If a sub-activity doesn't apply, write "n/a" with a one-line reason.
    - Feature flag wrapping if user-facing
 4. **Author a self-review checklist** the developer runs before requesting human review.
 5. **Hand-off to coding tools.** Produce a one-paragraph "Cursor/Claude Code prompt" the developer can paste to start the build.
-6. **Write artifact** to `.sevaai-sdlc/{feature-slug}/03-development.md` using `templates/artifact.md`.
+6. **Write artifact** to `docs/sdlc/{feature-slug}/03-development.md` using `templates/artifact.md`.
 
 ## Real-world products this skill complements
 
@@ -297,7 +297,7 @@ If a sub-activity doesn't apply, write "n/a" with a one-line reason.
 7. **Postmortem template** seeded with the feature context, so a future incident author has less blank-page friction.
 8. **Tech-debt watchlist.** TODOs, hacks, deferred work, known limitations. With owner and review-by date.
 9. **Capacity & cost trend** plan: what to watch for, when to revisit.
-10. **Write artifact** to `.sevaai-sdlc/{feature-slug}/07-maintenance.md` using `templates/artifact.md`.
+10. **Write artifact** to `docs/sdlc/{feature-slug}/07-maintenance.md` using `templates/artifact.md`.
 
 ## Real-world products this skill complements
 
@@ -323,7 +323,7 @@ This skill produces the *plan and runbook*. The products above provide the actua
 
 ## Hand-off
 
-This is the last stage. The orchestrator (`sdlc-orchestrator`) consolidates all 7 artifacts into a feature dossier under `.sevaai-sdlc/{feature-slug}/`.
+This is the last stage. The orchestrator (`sdlc-orchestrator`) consolidates all 7 artifacts into a feature dossier under `docs/sdlc/{feature-slug}/`.
 
 ## Template
 
@@ -348,8 +348,8 @@ Runs all seven SDLC stages in order against a single feature and consolidates th
 ## What to do
 
 1. **Slugify the feature.** Take the feature description, derive a slug like `add-saml-sso`. If the user provides one, use it.
-2. **Create the dossier folder** `.sevaai-sdlc/{feature-slug}/` in the project root. If the project root has a `.sevaai-sdlc.yaml` config that overrides `output_dir`, honor it.
-3. **Write the dossier index** `.sevaai-sdlc/{feature-slug}/00-index.md` with the feature description, target stages, and links to each stage's artifact (initially as `(pending)`).
+2. **Create the dossier folder** `docs/sdlc/{feature-slug}/` in the project root. If the project root has a `.sevaai-sdlc.yaml` config that overrides `output_dir`, honor it.
+3. **Write the dossier index** `docs/sdlc/{feature-slug}/00-index.md` with the feature description, target stages, and links to each stage's artifact (initially as `(pending)`).
 4. **Run stages in order**, invoking each skill via its `name` and passing the prior artifact:
    - `sdlc-requirements`  ->  `01-requirements.md`
    - `sdlc-design`        ->  `02-design.md`
@@ -365,7 +365,7 @@ Runs all seven SDLC stages in order against a single feature and consolidates th
 ## Output: dossier structure
 
 ```
-.sevaai-sdlc/{feature-slug}/
+docs/sdlc/{feature-slug}/
 ├── 00-index.md           # entry point with status of each stage
 ├── 01-requirements.md
 ├── 02-design.md
@@ -455,7 +455,7 @@ If any of those are missing, ask once concisely. Don't ask again.
    - Edge cases the LLM caught that a human likely missed
    - Dependencies (other stories, external systems, data migrations)
 4. **Flag risks**: ambiguous scope, unstated assumptions, missing personas, conflicting goals.
-5. **Write the artifact** to `.sevaai-sdlc/{feature-slug}/01-requirements.md` using `templates/artifact.md`.
+5. **Write the artifact** to `docs/sdlc/{feature-slug}/01-requirements.md` using `templates/artifact.md`.
 
 ## Real-world products this skill complements (not replaces)
 
@@ -474,7 +474,57 @@ If the user asks "should we use Productboard instead?", the answer is: this skil
 - **Compliance**: flag any story that touches PII, payment data, or auth — these need security stage review.
 - **Definition of Ready**: a story is ready when it has acceptance criteria, dependencies, and a sized estimate.
 
-## Hand-off
+## Hand-off to your real tracker (after writing the artifact)
+
+Once `01-requirements.md` is on disk, read `.sevaai-sdlc.yaml` -> `trackers` to see which destinations are enabled. For each enabled destination whose MCP is connected, ASK THE USER ONCE before pushing — do not auto-fire.
+
+### Jira (via Atlassian Rovo MCP)
+
+If `trackers.jira.enabled: true` and Atlassian Rovo MCP is connected:
+
+1. Ask: "Should I create the Jira Epic + Stories in `{trackers.jira.project_key}` now? (y/N)"
+2. If yes:
+   - Create one **Epic** with summary = the feature name and description = the artifact's Summary section + a link to the local file path.
+   - For each user story in section 4, create a **Story** under that Epic with:
+     - summary = story title
+     - description = "As a … I want … so that …" + Given-When-Then acceptance criteria + edge cases
+     - labels = compliance flags from section 7 (e.g., `pii`, `gdpr`, `soc2`, `hipaa`, `payment`, `accessibility`, `wcag`)
+     - story-point estimate hint from the size (S=1, M=3, L=5)
+3. Print the Epic key + all Story keys back to the user.
+4. Append a new section to `01-requirements.md`:
+   ```
+   ## Tracker links
+   - Jira Epic: {project_key}-{N}
+   - Jira Stories: {project_key}-{N+1}, {project_key}-{N+2}, ...
+   - Confluence PRD: (if pushed)
+   ```
+   So later stages can reference the Jira keys.
+
+### Notion (via Notion MCP)
+
+If `trackers.notion.enabled: true` and Notion MCP is connected:
+
+1. Ask: "Should I create a Notion PRD page in your PRDs database? (y/N)"
+2. If yes, create a page in database `{trackers.notion.prds_database_id}` with the markdown content as Notion blocks.
+3. Add the Notion page URL under the same `## Tracker links` section.
+
+### GitHub Issues (via GitHub MCP)
+
+If `trackers.github.enabled: true` and the GitHub MCP is connected:
+
+1. Ask: "Should I open a tracking GitHub Issue in `{trackers.github.issues_repo}`? (y/N)"
+2. If yes, open one Issue (not many — Jira owns story-level granularity) titled with the feature name, with a checklist for each SDLC stage and links to the Jira items.
+
+### Always
+
+Print the local artifact path as the system of record:
+```
+Artifact: docs/sdlc/<slug>/01-requirements.md
+```
+
+The local markdown is always the source of truth. Tracker pushes are mirrors — they make the work visible inside whatever tools your team operates from.
+
+## Hand-off to next stage
 
 When done, the orchestrator should invoke `sdlc-design` with the artifact at `01-requirements.md` as input.
 
@@ -541,7 +591,7 @@ If a sub-activity doesn't apply (e.g., no LLM in feature -> no GenAI threats), w
 7. **GenAI-specific threats** if the feature uses an LLM: prompt injection, training-data leakage, jailbreak, output-handling, model availability.
 8. **Compliance map** — if the project's `.sevaai-sdlc.yaml` declares SOC 2 / PCI / HIPAA / FedRAMP / GDPR, walk the relevant controls and produce evidence requirements.
 9. **Pen test plan** — what should a red team try once the feature ships.
-10. **Write artifact** to `.sevaai-sdlc/{feature-slug}/05-security.md` using `templates/artifact.md`. Mark the artifact `BLOCKING` if any HIGH-severity threat is unmitigated.
+10. **Write artifact** to `docs/sdlc/{feature-slug}/05-security.md` using `templates/artifact.md`. Mark the artifact `BLOCKING` if any HIGH-severity threat is unmitigated.
 
 ## Real-world products this skill complements
 
@@ -620,7 +670,7 @@ If a sub-activity doesn't apply, write "n/a" with a one-line reason.
 5. **Plan exploratory test charters** for areas hard to automate (UX, ambiguity, surprising states).
 6. **Name the test data strategy.** Synthetic via Tonic.ai? Recorded production traffic via Keploy? Hand-crafted fixtures?
 7. **Plan flaky-test budget.** What's acceptable, who triages, how long can a flake live before quarantine.
-8. **Write artifact** to `.sevaai-sdlc/{feature-slug}/04-testing.md` using `templates/artifact.md`.
+8. **Write artifact** to `docs/sdlc/{feature-slug}/04-testing.md` using `templates/artifact.md`.
 
 ## Real-world products this skill complements
 

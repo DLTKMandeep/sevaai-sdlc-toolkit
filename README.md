@@ -146,7 +146,7 @@ Once installed, just describe what you want to build:
 
 > "I need to add SSO with SAML to our portal, can you run the SDLC?"
 
-The orchestrator skill picks up the trigger, walks all seven stages, and writes artifacts to `.sevaai-sdlc/<feature-slug>/` in your project. You can also run individual stages by name:
+The orchestrator skill picks up the trigger, walks all seven stages, and writes artifacts to `docs/sdlc/<feature-slug>/` in your project. You can also run individual stages by name:
 
 > "Generate a threat model for the SSO feature."  -> triggers `sdlc-security` only
 > "Write the deployment plan for the SSO feature." -> triggers `sdlc-deployment` only
@@ -154,7 +154,7 @@ The orchestrator skill picks up the trigger, walks all seven stages, and writes 
 
 ## What you get per stage
 
-Each stage produces a structured markdown artifact under `.sevaai-sdlc/<feature-slug>/`. Every artifact addresses an explicit set of sub-activities — see [docs/sdlc-stages-detail.md](docs/sdlc-stages-detail.md) for the full breakdown.
+Each stage produces a structured markdown artifact under `docs/sdlc/<feature-slug>/`. Every artifact addresses an explicit set of sub-activities — see [docs/sdlc-stages-detail.md](docs/sdlc-stages-detail.md) for the full breakdown.
 
 | Stage | Sub-activities covered | Artifact | Real-world products it works alongside |
 |---|---|---|---|
@@ -224,7 +224,7 @@ Open any `SKILL.md` and edit the `Project conventions` block. Common things team
 - **Compliance frameworks.** Add SOC 2 / FedRAMP / HIPAA / PCI requirements that the skill should always check.
 - **Supported runtimes.** Tell the design skill it must produce designs that fit your stack (e.g., Node + Postgres + GKE).
 - **Tooling.** Tell the security skill which scanners you use, the deployment skill which CD platform you run.
-- **Output destinations.** Default writes to `.sevaai-sdlc/`; change to `docs/sdlc/` or wherever your team keeps specs.
+- **Output destinations.** Default writes to `docs/sdlc/`; change to `docs/sdlc/` or wherever your team keeps specs.
 
 ## License
 

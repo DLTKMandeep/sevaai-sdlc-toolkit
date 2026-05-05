@@ -11,7 +11,7 @@ Thanks for your interest. The skill pack is intentionally simple — markdown bu
    ln -s "$(pwd)/commands/sdlc.md" ~/.claude/commands/sdlc.md
    ```
 3. Open a project and run `/sdlc <a feature description>` to exercise the orchestrator end-to-end, or paste a single-stage trigger phrase to exercise one skill.
-4. Inspect the generated dossier under `.sevaai-sdlc/{feature-slug}/` and iterate on the SKILL.md instructions or templates.
+4. Inspect the generated dossier under `docs/sdlc/{feature-slug}/` and iterate on the SKILL.md instructions or templates.
 
 ## What good contributions look like
 

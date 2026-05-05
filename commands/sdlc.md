@@ -9,7 +9,7 @@ The user wants to take the following feature through all seven SDLC stages end-t
 
 > $ARGUMENTS
 
-Invoke the `sdlc-orchestrator` skill. It will create a dossier under `.sevaai-sdlc/{feature-slug}/` and walk through Requirements -> Design -> Development -> Testing -> Security -> Deployment -> Maintenance, writing one artifact per stage and an index file.
+Invoke the `sdlc-orchestrator` skill. It will create a dossier under `docs/sdlc/{feature-slug}/` and walk through Requirements -> Design -> Development -> Testing -> Security -> Deployment -> Maintenance, writing one artifact per stage and an index file.
 
 After all stages complete (or if security halts the pipeline), summarize:
 - the feature slug and dossier path

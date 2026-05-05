@@ -46,7 +46,7 @@ If a sub-activity doesn't apply, write "n/a" with a one-line reason.
    - Feature flag wrapping if user-facing
 4. **Author a self-review checklist** the developer runs before requesting human review.
 5. **Hand-off to coding tools.** Produce a one-paragraph "Cursor/Claude Code prompt" the developer can paste to start the build.
-6. **Write artifact** to `.sevaai-sdlc/{feature-slug}/03-development.md` using `templates/artifact.md`.
+6. **Write artifact** to `docs/sdlc/{feature-slug}/03-development.md` using `templates/artifact.md`.
 
 ## Real-world products this skill complements
 

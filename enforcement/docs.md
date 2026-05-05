@@ -5,7 +5,7 @@ For engineering managers and platform teams introducing the dossier-required pol
 ## The change you're making
 
 Before: anyone can open a PR and merge it.
-After: every PR to `main` requires a complete `.sevaai-sdlc/<slug>/` dossier; the security stage must be non-BLOCKING; CI fails the PR if either is missing.
+After: every PR to `main` requires a complete `docs/sdlc/<slug>/` dossier; the security stage must be non-BLOCKING; CI fails the PR if either is missing.
 
 ## Phased rollout (recommended)
 

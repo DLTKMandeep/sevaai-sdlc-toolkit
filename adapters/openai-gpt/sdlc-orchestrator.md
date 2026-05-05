@@ -22,8 +22,8 @@ Runs all seven SDLC stages in order against a single feature and consolidates th
 ## What to do
 
 1. **Slugify the feature.** Take the feature description, derive a slug like `add-saml-sso`. If the user provides one, use it.
-2. **Create the dossier folder** `.sevaai-sdlc/{feature-slug}/` in the project root. If the project root has a `.sevaai-sdlc.yaml` config that overrides `output_dir`, honor it.
-3. **Write the dossier index** `.sevaai-sdlc/{feature-slug}/00-index.md` with the feature description, target stages, and links to each stage's artifact (initially as `(pending)`).
+2. **Create the dossier folder** `docs/sdlc/{feature-slug}/` in the project root. If the project root has a `.sevaai-sdlc.yaml` config that overrides `output_dir`, honor it.
+3. **Write the dossier index** `docs/sdlc/{feature-slug}/00-index.md` with the feature description, target stages, and links to each stage's artifact (initially as `(pending)`).
 4. **Run stages in order**, invoking each skill via its `name` and passing the prior artifact:
    - `sdlc-requirements`  ->  `01-requirements.md`
    - `sdlc-design`        ->  `02-design.md`
@@ -39,7 +39,7 @@ Runs all seven SDLC stages in order against a single feature and consolidates th
 ## Output: dossier structure
 
 ```
-.sevaai-sdlc/{feature-slug}/
+docs/sdlc/{feature-slug}/
 ├── 00-index.md           # entry point with status of each stage
 ├── 01-requirements.md
 ├── 02-design.md

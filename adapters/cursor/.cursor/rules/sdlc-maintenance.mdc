@@ -54,7 +54,7 @@ If a sub-activity doesn't apply, write "n/a" with a one-line reason.
 7. **Postmortem template** seeded with the feature context, so a future incident author has less blank-page friction.
 8. **Tech-debt watchlist.** TODOs, hacks, deferred work, known limitations. With owner and review-by date.
 9. **Capacity & cost trend** plan: what to watch for, when to revisit.
-10. **Write artifact** to `.sevaai-sdlc/{feature-slug}/07-maintenance.md` using `templates/artifact.md`.
+10. **Write artifact** to `docs/sdlc/{feature-slug}/07-maintenance.md` using `templates/artifact.md`.
 
 ## Real-world products this skill complements
 
@@ -80,7 +80,7 @@ This skill produces the *plan and runbook*. The products above provide the actua
 
 ## Hand-off
 
-This is the last stage. The orchestrator (`sdlc-orchestrator`) consolidates all 7 artifacts into a feature dossier under `.sevaai-sdlc/{feature-slug}/`.
+This is the last stage. The orchestrator (`sdlc-orchestrator`) consolidates all 7 artifacts into a feature dossier under `docs/sdlc/{feature-slug}/`.
 
 ## Template
 

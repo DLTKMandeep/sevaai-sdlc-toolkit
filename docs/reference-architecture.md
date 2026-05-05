@@ -4,7 +4,7 @@
 
 ## The flow in one paragraph
 
-A user types a trigger phrase in their Claude Code or Cowork session. Claude matches that phrase against every installed `SKILL.md`'s `description` field and routes to either the **orchestrator skill** (full pipeline) or a **single stage skill** (one artifact). Whichever skill runs, it executes the same engine: `Glob` to discover relevant project files, `Read` to open them, `Grep` to search code, an `LLM call` to synthesize the artifact, an optional `MCP` call for live data from connected systems (Jira, Datadog, etc.), and `Write` to save the artifact under `.sevaai-sdlc/{feature-slug}/`. Each stage's artifact is meant to be the structured input a real downstream product (Snyk, Mabl, LaunchDarkly, PagerDuty, ...) can consume.
+A user types a trigger phrase in their Claude Code or Cowork session. Claude matches that phrase against every installed `SKILL.md`'s `description` field and routes to either the **orchestrator skill** (full pipeline) or a **single stage skill** (one artifact). Whichever skill runs, it executes the same engine: `Glob` to discover relevant project files, `Read` to open them, `Grep` to search code, an `LLM call` to synthesize the artifact, an optional `MCP` call for live data from connected systems (Jira, Datadog, etc.), and `Write` to save the artifact under `docs/sdlc/{feature-slug}/`. Each stage's artifact is meant to be the structured input a real downstream product (Snyk, Mabl, LaunchDarkly, PagerDuty, ...) can consume.
 
 ## Layers
 
@@ -42,7 +42,7 @@ The only thing that changes between stages is **which files Glob/Read/Grep targe
 
 ### 5. Output dossier
 
-Every run produces (or appends to) a folder at `.sevaai-sdlc/{feature-slug}/`:
+Every run produces (or appends to) a folder at `docs/sdlc/{feature-slug}/`:
 
 ```
 00-index.md          # index that lists all 7 artifacts and stage status

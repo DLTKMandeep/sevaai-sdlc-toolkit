@@ -51,7 +51,7 @@
 
 Paste this into Cursor / Claude Code / Copilot Workspace to start the implementation:
 
-> "Implement PR 2 from `.sevaai-sdlc/{feature-slug}/03-development.md`. The design is in `02-design.md`. Create the listed files, follow the existing conventions in `src/services/`, and stop before writing tests — tests come from the testing stage."
+> "Implement PR 2 from `docs/sdlc/{feature-slug}/03-development.md`. The design is in `02-design.md`. Create the listed files, follow the existing conventions in `src/services/`, and stop before writing tests — tests come from the testing stage."
 
 ## 6. Hand-off
 
