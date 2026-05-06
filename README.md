@@ -21,13 +21,33 @@ Each skill is self-contained, references the real-world tools you already use (J
 The skills are markdown — they work anywhere you can set custom instructions. See [`adapters/`](adapters/) for ready-to-paste configs per tool.
 
 ```
-+-----------+    +-------------+   +--------+   +-------------+   +---------+   +----------+   +------------+   +-------------+
-| Bootstrap | -> | Requirements |->| Design |->| Development |->| Testing |->| Security |->| Deployment |->| Maintenance |
-+-----------+    +-------------+   +--------+   +-------------+   +---------+   +----------+   +------------+   +-------------+
-  Stage 0          ^------------------------------- /sdlc orchestrator (Stages 1-7) -----------------------------------^
-  greenfield
-  only
+GREENFIELD FLOW (new project)
+=============================
+
+[Stage 0]                     [Stages 1-7 on the WALKING SKELETON]
++-----------+    /sdlc        +-------------+   +--------+ ... +-------------+
+| Bootstrap | --hand off-->   | Requirements |->| Design |->...| Maintenance |   <-- project baseline
++-----------+                 +-------------+   +--------+ ... +-------------+
+  vision                       smallest end-to-end slice that exercises every
+  ADRs                         architectural seam (e.g., POST /events returns
+  architecture                 202; row lands in DB; Datadog sees the span)
+  .sevaai-sdlc.yaml
+  scaffolding
+
+
+PER-FEATURE FLOW (every feature after the walking skeleton)
+===========================================================
+
+                    /sdlc <feature>
+                  +-------------+   +--------+ ... +-------------+
+                  | Requirements |->| Design |->...| Maintenance |
+                  +-------------+   +--------+ ... +-------------+
+                    each feature inherits decisions from the walking-
+                    skeleton dossier (security controls, deploy pattern,
+                    test pyramid shape) — no re-derivation.
 ```
+
+**The rule:** Stage 0 produces the frame. The walking skeleton dossier produces the project's foundational SDLC artifacts. Subsequent features reference both, not re-derive them.
 
 > See [docs/reference-architecture.md](docs/reference-architecture.md) for the full reference architecture diagram showing flow, runtime tools (Glob / Read / Grep / LLM / MCP / Write), and per-stage hand-off to real-world products. See [docs/sdlc-stages-detail.md](docs/sdlc-stages-detail.md) for the elaborate per-stage breakdown — every sub-activity each stage's artifact must address (Planning, HLD/LLD, System/Manual/Automated Testing, STRIDE/OWASP/Compliance, Feedback Loop, etc.).
 
@@ -126,6 +146,8 @@ Prefer the terminal? Run the bundled installer:
 ./scripts/setup-mcps.sh --list          # browse the catalog grouped by stage
 ```
 
+**New to MCPs or stuck on `/mcp`?** Read [docs/mcp-user-guide.md](docs/mcp-user-guide.md) — it's the practical walkthrough with copy-paste commands for every common MCP (GitHub, Atlassian, Notion, PagerDuty, Datadog, Snyk, LaunchDarkly, Mixpanel, etc.), plus the gotchas (Apple Silicon Rosetta 2, missing in-app option, token rotation, scope conflicts).
+
 See [docs/mcp-catalog.md](docs/mcp-catalog.md) for the full categorized list and [docs/mcp-integration.md](docs/mcp-integration.md) for which MCPs help which stages. The `.mcp.json` includes a `_custom_endpoint_template` so teams can plug in internal or on-prem MCPs by following the same shape.
 
 If you skip MCP setup entirely, the toolkit still works — every skill falls back to local file reads, the `.sevaai-sdlc.yaml` config, and your chat input.
@@ -220,6 +242,7 @@ Each stage skill is a folder with a `SKILL.md` (instructions for the AI, includi
 | [docs/reference-architecture.md](docs/reference-architecture.md) | Flow + runtime tools (Glob/Read/Grep/LLM/MCP/Write) + hand-off products |
 | [docs/sdlc-stages-detail.md](docs/sdlc-stages-detail.md) | Every sub-activity each stage's artifact must address |
 | [docs/mcp-catalog.md](docs/mcp-catalog.md) | All 34+ bundled MCPs grouped by stage + how to add your own |
+| [docs/mcp-user-guide.md](docs/mcp-user-guide.md) | Practical, copy-paste MCP setup walkthrough (start here if `/mcp` is confusing) |
 | [docs/mcp-integration.md](docs/mcp-integration.md) | Which MCPs help which stages and how to roll them out |
 | [docs/customization.md](docs/customization.md) | Tune the skills for your stack and conventions |
 | [adapters/README.md](adapters/README.md) | Per-tool install steps for Cursor, Aider, GPTs, Gems, raw |
