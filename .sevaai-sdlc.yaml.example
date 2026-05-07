@@ -22,6 +22,13 @@ trackers:
   github:
     enabled: false
     issues_repo: ""                 # e.g., "your-org/your-repo"
+    mode: umbrella                  # "umbrella" = one tracking issue per feature (pairs with Jira)
+                                    # "backlog"  = one umbrella + one child issue per user story
+                                    #              (use when GitHub is your primary tracker)
+    project_v2_number: 0            # optional — if set, created issues are added to this Project v2 board
+    labels:
+      feature: "feature"            # label applied to the umbrella issue
+      story: "story"                # label applied to each story issue (in backlog mode)
 
 # Project context — free-text, injected into every system prompt.
 # Use this to anchor the AI to your domain, stack, conventions, compliance reqs.

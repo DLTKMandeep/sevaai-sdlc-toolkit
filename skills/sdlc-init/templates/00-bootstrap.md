@@ -110,11 +110,31 @@ Short summary of each ADR with the decision and the strongest rejected alternati
 |---|---|---|---|
 | 1 | | First feature design | |
 
-## 10. Hand-off to Stage 1
+## 10. Walking skeleton — the project baseline
 
-The project is now ready for feature-level SDLC work. Next:
+The bootstrap is the *frame*, not the SDLC. The first feature run through Stages 1-7 establishes the **project baseline**: a complete dossier (Requirements + Design + Development + Testing + Security + Deployment + Maintenance) that subsequent features reference instead of re-deriving architecture each time.
 
-- `/sdlc <first feature description>` — runs the full pipeline for your first feature
-- Or stage by stage starting with `sdlc-requirements`
+The walking skeleton is the right vehicle for this. It's the smallest end-to-end slice that exercises every architectural seam.
 
-The first feature should be the **smallest end-to-end slice that proves the architecture works** — sometimes called a "tracer bullet" or "walking skeleton". Don't pick the most user-valuable feature first; pick the one that exercises the most architectural seams.
+**Proposed walking skeleton:** {one-line description that touches every component in §3 of `docs/architecture.md`}
+
+**Why this slice:**
+- Touches: {list of components from architecture, e.g., "edge → API → validator → DB → observability"}
+- Defers: {what's explicitly NOT in v1 — query, search, multi-event, auth-server-issued tokens, etc.}
+- Verifiable by: {how you'll know it works — e.g., "curl POST returns 202 with event_id; SELECT confirms row in events; Datadog shows the request span"}
+
+**Drive it through the SDLC:**
+
+```
+/sdlc {walking skeleton description}
+```
+
+The resulting `docs/sdlc/walking-skeleton/` dossier becomes the project's foundational SDLC reference. Every subsequent feature should:
+- Cite the walking-skeleton design as architectural precedent
+- Inherit security controls established in `docs/sdlc/walking-skeleton/05-security.md`
+- Use the deployment pattern locked in by `docs/sdlc/walking-skeleton/06-deployment.md`
+- Match the test pyramid shape from `docs/sdlc/walking-skeleton/04-testing.md`
+
+## 11. Subsequent features
+
+Once the walking skeleton is shipped, every additional feature follows the standard per-feature SDLC: `/sdlc <feature>` → 7 stages → ship. The bootstrap dossier (this file) and the walking-skeleton dossier together form the project baseline that those features ground against.

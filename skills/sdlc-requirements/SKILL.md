@@ -99,10 +99,44 @@ If `trackers.notion.enabled: true` and Notion MCP is connected:
 
 ### GitHub Issues (via GitHub MCP)
 
-If `trackers.github.enabled: true` and the GitHub MCP is connected:
+If `trackers.github.enabled: true` and the GitHub MCP is connected, the behavior depends on `trackers.github.mode`:
+
+**Mode `umbrella` (default — pairs well with Jira)**
+
+One umbrella issue per feature, no story-level duplication.
 
 1. Ask: "Should I open a tracking GitHub Issue in `{trackers.github.issues_repo}`? (y/N)"
-2. If yes, open one Issue (not many — Jira owns story-level granularity) titled with the feature name, with a checklist for each SDLC stage and links to the Jira items.
+2. If yes, open one Issue titled with the feature name, with a checklist for each SDLC stage and links to the Jira items (if Jira ran first).
+
+**Mode `backlog` (full story-per-issue — for teams using GitHub as their primary tracker)**
+
+One umbrella issue plus one child issue per user story, mimicking the Jira Workstream → Stories pattern.
+
+1. Ask: "Should I create the GitHub backlog (1 umbrella + N stories) in `{trackers.github.issues_repo}`? (y/N)"
+2. If yes:
+   - Create the **umbrella issue** with title = feature name, body = the artifact's Summary section + a checklist where each item links to a child story issue (filled in after creation), labels from `trackers.github.labels.feature` (default: `feature`).
+   - For each user story in section 4 of the artifact, create a **child issue** with:
+     - title = story title (prefix with `[<feature-slug>]` for grep-ability)
+     - body = "As a … I want … so that …" + Given-When-Then acceptance criteria + edge cases + a back-link to the umbrella issue (`Part of #<umbrella>`)
+     - labels = `trackers.github.labels.story` (default: `story`) + the compliance flags from section 7 (e.g., `pii`, `gdpr`, `soc2`, `hipaa`, `payment`, `accessibility`, `wcag`)
+     - assignees = none (let humans claim)
+   - Edit the umbrella issue's body to fill in the child issue numbers in the checklist.
+   - If `trackers.github.project_v2_number` is set, add all created issues to that GitHub Project v2 board via the GraphQL `addProjectV2ItemById` mutation.
+3. Print the umbrella issue number + all child issue numbers back to the user.
+4. Append to the `## Tracker links` section in `01-requirements.md`:
+   ```
+   - GitHub umbrella: #<umbrella>
+   - GitHub stories: #<N+1>, #<N+2>, ...
+   - GitHub project board: <URL> (if project_v2_number set)
+   ```
+
+**Choosing a mode**
+
+If both Jira AND GitHub are enabled, default to GitHub `umbrella` — Jira owns story granularity. If only GitHub is enabled, default to `backlog` — there's no other tracker carrying the stories.
+
+**Closing the loop**
+
+When a PR merges that references a child issue (`Closes #N`), the issue auto-closes and the umbrella issue's checkbox auto-ticks. This gives you a free Definition-of-Done indicator on the feature's progress.
 
 ### Always
 

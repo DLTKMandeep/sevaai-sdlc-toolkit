@@ -8,19 +8,49 @@ license: MIT
 
 Take the requirements artifact and produce a component design, API contracts, data model, and an ADR documenting the key decision. This is the deepest-reasoning stage; pair with the strongest model tier you have available.
 
+## Standards we follow
+
+Two industry-standard formats produce a design doc reviewers know how to read:
+
+- **arc42** — text structure for the design doc. 12 canonical sections; widely used in regulated and mid-market engineering. The artifact's H2 sections in §1-§12 below map 1:1 onto arc42.
+- **C4 model** — visual notation for the diagrams (Simon Brown). Four levels: System Context → Container → Component → Code. Most teams use levels 1-3.
+
+Diagrams are **Mermaid** in markdown (renders natively on GitHub). The lint rules in the next section prevent the parser failures Mermaid is prone to.
+
+## Mermaid lint rules — apply to every diagram
+
+Mermaid's parser has five sharp edges that AI-generated content keeps hitting. These rules are not optional — they prevent the design doc from rendering as a red error on GitHub.
+
+1. **No spaces in subgraph or node IDs.** Use `subgraph WorkerService [Display Label]`, not `subgraph Worker Service`. The bracketed label can have spaces; the ID cannot.
+2. **No `;` in sequence-diagram messages.** Mermaid treats `;` as a statement terminator. Use `,` or split into two arrows.
+3. **No `<` or `>` in messages or `alt`/`else`/`opt` labels.** Use words: "above", "below", "at least", "at most".
+4. **No `<tagname>` in messages.** Looks like HTML to the renderer. Use `[name]` or `(name)` placeholders.
+5. **Use single-token arrow labels.** Avoid quotes inside diagram messages where possible.
+
+If `lint_mermaid` is available via the diagram MCP, call it before writing the artifact. Otherwise self-check against these rules before each `flowchart` or `sequenceDiagram` block.
+
 ## Sub-activities covered
 
-The artifact must address these in `02-design.md`:
+The artifact must address these in `02-design.md`, structured per arc42:
 
-**High-Level Design (HLD)** — system architecture diagram (Mermaid), service boundaries and responsibilities, tech stack decisions, integration points with existing services, system-level data flow.
+**§1 Introduction & Goals** — what's being built, the requirements quoted, success criteria.
+**§2 Constraints** — technical, organizational, regulatory constraints (from `.sevaai-sdlc.yaml`).
+**§3 Context & Scope** — C4 Level 1 (System Context diagram) showing the system + external actors and systems.
+**§4 Solution Strategy** — the core approach in 5-10 sentences. Why this shape, not another.
+**§5 Building Blocks** — C4 Level 2 (Container diagram) + C4 Level 3 (Component diagram for the most complex container). Module/package structure.
+**§6 Runtime View** — sequence diagrams for the 1-3 critical flows.
+**§7 Deployment View** — where the containers run (ECS / EKS / serverless), env-by-env differences.
+**§8 Cross-cutting Concepts** — auth, observability, caching, error handling, i18n.
+**§9 Architecture Decisions (ADRs)** — one or more ADRs, each with rejected alternatives. Standalone copies in `docs/adr/NNNN-*.md`.
+**§10 Quality Requirements** — non-functional requirements (perf, scale, availability) with measurable targets.
+**§11 Risks & Technical Debt** — what could go wrong; what we're consciously punting.
+**§12 Glossary** — domain terms used in the doc.
 
-**Low-Level Design (LLD)** — module / class / package structure, API contracts (OpenAPI), data model (schema additions, indexes, migrations forward + rollback), sequence diagrams for non-trivial flows, configuration / env vars.
+Plus a final §13 first-pass STRIDE threat model (full review happens in stage 5).
 
-**Architecture Decision Record (ADR)** — context, decision, alternatives considered + why rejected, consequences, supersession of prior ADRs if any.
+Plus §14 Hand-off to Stage 2.5 (Functional-to-Technical Mapping) — the next stage consumes this artifact + the requirements artifact to produce the traceability matrix.
 
-**First-pass threat model** — STRIDE one-liners per component (full review happens in stage 5).
-
-If a sub-activity doesn't apply (e.g., no schema changes -> no migration), write "n/a" with a one-line reason.
+If a section doesn't apply (e.g., no schema changes → no migration), write "n/a" with a one-line reason.
 
 ## When to invoke
 
@@ -38,16 +68,14 @@ If the requirements artifact is missing, ask the user to run `sdlc-requirements`
 
 ## What to do
 
-1. **Read existing ADRs.** Don't contradict prior decisions silently. If you must, surface the conflict and propose an ADR supersession.
-2. **Identify the design's center of gravity.** Is this primarily a data-model change, a new service, a new API surface, a UI change, or a cross-cutting concern (auth, observability)?
-3. **Produce four sub-artifacts** inside the same output file:
-   - **Component diagram (Mermaid)** showing services, data stores, external systems
-   - **API contracts** — OpenAPI snippet or typed function signatures, with auth, errors, pagination
-   - **Data model** — schema additions/changes (DDL or schema language) with indexes and migrations
-   - **ADR** — context, decision, alternatives considered, consequences, supersedes (if any)
-4. **First-pass threat model.** STRIDE one-liners per component. The full security review is `sdlc-security`'s job; here you just flag.
-5. **Trade-offs.** Explicitly list two alternatives you considered and why you didn't pick them.
-6. **Write artifact** to `docs/sdlc/{feature-slug}/02-design.md` using `templates/artifact.md`.
+1. **Brownfield check.** If `docs/sdlc/{feature-slug}/02-design.md` already exists, read it and ask the user: "Existing design doc found. Augment, replace, or skip?" Default to augment.
+2. **Read existing ADRs.** Read all `docs/adr/*.md`. Don't contradict prior decisions silently. If you must, surface the conflict and propose an ADR supersession with the next sequential number.
+3. **Identify the design's center of gravity.** Is this primarily a data-model change, a new service, a new API surface, a UI change, or a cross-cutting concern (auth, observability)? The arc42 sections weighting depends on the answer.
+4. **Produce all 12 arc42 sections** (plus §13 STRIDE, §14 hand-off) per the template. C4 Levels 1, 2, and (where the design has a complex container) 3. Mermaid for visual rendering on GitHub.
+5. **Lint diagrams before writing.** Apply the 5 Mermaid lint rules. If the diagram MCP is connected, call `lint_mermaid` on every diagram block.
+6. **First-pass threat model.** STRIDE one-liners per component. The full security review is `sdlc-security`'s job; here you just flag.
+7. **Write each ADR twice.** Once embedded in §9 of the design doc, once as a standalone file `docs/adr/NNNN-{slug}.md` for grep-ability. Both copies stay in sync.
+8. **Write artifact** to `docs/sdlc/{feature-slug}/02-design.md` using `templates/artifact.md`.
 
 ## Real-world products this skill complements
 
@@ -67,7 +95,7 @@ If the requirements artifact is missing, ask the user to run `sdlc-requirements`
 
 ## Hand-off
 
-The orchestrator should invoke `sdlc-development` with `02-design.md` as input.
+The orchestrator should invoke `sdlc-mapping` (Stage 2.5) next, NOT `sdlc-development` directly. Stage 2.5 consumes both `01-requirements.md` and `02-design.md` to produce the Functional-to-Technical traceability matrix that drives backlog generation in Stage 3.
 
 ## Template
 

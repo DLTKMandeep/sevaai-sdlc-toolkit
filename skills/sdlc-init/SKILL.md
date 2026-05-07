@@ -161,19 +161,48 @@ To prevent the parser failures we've hit before:
    - If the GitHub MCP is connected, ask the user for a repo name (default: project slug) and create the repo via `mcp__github__create_repository`, then push.
    - If the GitHub MCP is not connected, print the commands the user should run manually.
 
-### Hand-off to next stage
+### Hand-off — the walking skeleton
 
-After the bootstrap, the project is ready for `sdlc-requirements` to plan the first feature. Tell the user:
+A greenfield project is **not done** at the end of Stage 0. The bootstrap dossier produces *decisions and structure*, not the SDLC discipline applied to those decisions. Without Stages 1-7, the project foundation is exempt from the very rigor the toolkit enforces for every feature built on top of it.
+
+The pattern that closes this gap is the **walking skeleton**: identify the smallest end-to-end slice that exercises every architectural seam, run it through Stages 1-7 immediately, and treat the resulting dossier as the **project baseline**. Subsequent features reference this baseline instead of re-deriving architecture each time.
+
+**What makes a good walking skeleton:**
+- End-to-end (touches every component named in `docs/architecture.md` at least once)
+- Trivially small in scope (one happy path, no edge cases)
+- Real (not a hello-world; produces some persistent artifact a human can verify)
+- Defensible as v1 (it's a feature you'd actually ship, not a throwaway demo)
+
+For Orion (log-stream platform): "POST a single log line to /events, validate it, persist as a structured event, return 202 with the event id." That one feature touches API, validation, persistence, observability, auth — every component in the architecture is exercised.
+
+For a B2B SaaS: "tenant admin signs in, sees an empty dashboard, can sign out." That touches auth, tenant routing, frontend, session management, observability.
+
+For a payments platform: "create a $1 charge against a test card, persist the charge record, return success." Touches API, validation, external API integration, persistence, idempotency.
+
+### Hand-off message
+
+After writing the bootstrap dossier, tell the user:
 
 ```
-Project bootstrapped. Next:
+Project bootstrapped. The bootstrap is *not* the SDLC — it's the frame
+the SDLC sits in. Next, identify the walking skeleton (smallest
+end-to-end slice that exercises every architectural seam) and drive it
+through Stages 1-7. That dossier becomes the project's foundational
+SDLC artifact; later features reference it instead of re-deriving
+architecture.
 
-  /sdlc <description of your first feature>
+Suggested walking skeleton for {project name}: {one-line proposal}
 
-Or, if you want to drive stage by stage:
+To proceed, run:
 
-  Run sdlc-requirements for: <feature description>
+  /sdlc {walking skeleton description}
+
+This will create docs/sdlc/walking-skeleton/01-requirements.md through
+07-maintenance.md. Subsequent features reference this dossier as the
+project baseline.
 ```
+
+Always propose a concrete walking-skeleton description — don't make the user invent one cold. Base your proposal on `docs/architecture.md` and the MVP scope from the bootstrap intake. The user can refine or replace it, but they should never face a blank prompt.
 
 ## Behavioral rules
 

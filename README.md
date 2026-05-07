@@ -8,7 +8,9 @@
 Drop this plugin into your AI assistant and get composable skills that walk a project from zero through operations:
 
 **Stage 0 (greenfield only)** — Project bootstrap: vision, architecture, ADRs, repo skeleton.
-**Stages 1-7 (per feature)** — Requirements → Design → Development → Testing → Security → Deployment → Maintenance.
+**Stages 1-7 (per feature, brownfield-aware)** — Requirements → Design (arc42 + C4) → Mapping → Development → Testing → Security → Deployment → Maintenance.
+
+The Mapping stage (2.5) is the bridge between PM-speak (stories) and Eng-speak (files, migrations, config). Stage 3 consumes it to **auto-create the GitHub Projects v2 backlog** — one Issue per mapping row, with labels, dependencies, and Project board placement set automatically.
 
 Each skill is self-contained, references the real-world tools you already use (Jira, Snyk, Datadog, Harness, etc.), and produces ship-ready markdown artifacts. Use Stage 0 when starting a brand-new project; jump straight to Stage 1 when adding a feature to an existing codebase.
 
@@ -21,30 +23,32 @@ Each skill is self-contained, references the real-world tools you already use (J
 The skills are markdown — they work anywhere you can set custom instructions. See [`adapters/`](adapters/) for ready-to-paste configs per tool.
 
 ```
-GREENFIELD FLOW (new project)
-=============================
+PER-FEATURE FLOW
+================
+        /sdlc <feature>
+                                                                     +-> auto-creates
+                                                                     |   GitHub Projects v2
+                                                                     |   backlog
++--------+     +------+     +---------+     +-----+     +-----+     +-----+
+|   1    | --> |  2   | --> |  2.5    | --> |  3  | --> |  4  | --> | 5-7 |
+| Reqs   |     |Design|     | Mapping |     | Dev |     | Test|     |     |
+| (Jira) |     |arc42 |     | (RTM)   |     |+plan|     |     |     |     |
++--------+     | + C4 |     +---------+     +-----+     +-----+     +-----+
+               +------+
+              (GitHub                    (mapping is the
+               markdown)                  bridge from
+                                          stories to
+                                          file paths)
 
-[Stage 0]                     [Stages 1-7 on the WALKING SKELETON]
-+-----------+    /sdlc        +-------------+   +--------+ ... +-------------+
-| Bootstrap | --hand off-->   | Requirements |->| Design |->...| Maintenance |   <-- project baseline
-+-----------+                 +-------------+   +--------+ ... +-------------+
-  vision                       smallest end-to-end slice that exercises every
-  ADRs                         architectural seam (e.g., POST /events returns
-  architecture                 202; row lands in DB; Datadog sees the span)
-  .sevaai-sdlc.yaml
-  scaffolding
-
-
-PER-FEATURE FLOW (every feature after the walking skeleton)
-===========================================================
-
-                    /sdlc <feature>
-                  +-------------+   +--------+ ... +-------------+
-                  | Requirements |->| Design |->...| Maintenance |
-                  +-------------+   +--------+ ... +-------------+
-                    each feature inherits decisions from the walking-
-                    skeleton dossier (security controls, deploy pattern,
-                    test pyramid shape) — no re-derivation.
+GREENFIELD ADDS Stage 0 BEFORE Stage 1
+======================================
++-----------+
+| Stage 0   |  vision · ADRs · architecture · .sevaai-sdlc.yaml · scaffolding
+| Bootstrap |  produces the FRAME; the walking-skeleton feature run through
++-----------+  Stages 1-7 produces the project BASELINE.
+     |
+     v  /sdlc <walking-skeleton>
+   (per-feature flow above)
 ```
 
 **The rule:** Stage 0 produces the frame. The walking skeleton dossier produces the project's foundational SDLC artifacts. Subsequent features reference both, not re-derive them.

@@ -26,13 +26,16 @@ Runs all seven SDLC stages in order against a single feature and consolidates th
 4. **Write the dossier index** `docs/sdlc/{feature-slug}/00-index.md` with the feature description, target stages, and links to each stage's artifact (initially as `(pending)`).
 5. **Run stages in order**, invoking each skill via its `name` and passing the prior artifact:
    - `sdlc-init`          ->  `docs/sdlc/_bootstrap/00-bootstrap.md` (greenfield only — runs before any feature)
-   - `sdlc-requirements`  ->  `01-requirements.md`
-   - `sdlc-design`        ->  `02-design.md`
-   - `sdlc-development`   ->  `03-development.md`
+   - `sdlc-requirements`  ->  `01-requirements.md`                  (push to Jira / GitHub Issues)
+   - `sdlc-design`        ->  `02-design.md`                        (arc42 + C4 + Mermaid)
+   - `sdlc-mapping`       ->  `02b-mapping.md`                      (Functional-to-Technical traceability matrix)
+   - `sdlc-development`   ->  `03-development.md`                   (PR plan + auto-creates GitHub Projects v2 backlog)
    - `sdlc-testing`       ->  `04-testing.md`
    - `sdlc-security`      ->  `05-security.md`
    - `sdlc-deployment`    ->  `06-deployment.md`
    - `sdlc-maintenance`   ->  `07-maintenance.md`
+
+   **Brownfield-aware skipping:** at each stage, check whether the output already exists. If yes, ask the user: "Stage N output found at `<path>`. Augment, replace, or skip?" Default behavior is `skip` for stages 1-2, `augment` for stages 2.5-3 (where adding stories or backlog items is common), and `skip` for stages 4-7 (where artifacts are usually finalized once written).
 6. **Halt on blocking security findings.** If `sdlc-security` marks the artifact `BLOCKING: yes`, stop the pipeline, surface the findings to the user, and ask whether to override or remediate before continuing.
 7. **Update the index** after each stage so the user sees progress.
 8. **At the end**, summarize the dossier in chat: feature, 7 artifact links, top 3 risks called out across stages, top 3 follow-ups.
@@ -41,10 +44,11 @@ Runs all seven SDLC stages in order against a single feature and consolidates th
 
 ```
 docs/sdlc/{feature-slug}/
-├── 00-index.md           # entry point with status of each stage
+├── 00-index.md            # entry point with status of each stage
 ├── 01-requirements.md
-├── 02-design.md
-├── 03-development.md
+├── 02-design.md           # arc42 + C4
+├── 02b-mapping.md         # Functional-to-Technical traceability matrix
+├── 03-development.md      # PR plan + GitHub Projects v2 backlog
 ├── 04-testing.md
 ├── 05-security.md
 ├── 06-deployment.md
@@ -76,8 +80,9 @@ This orchestrator is the AI analog of a delivery lead walking a feature from int
 | # | Stage | Status | Artifact |
 |---|---|---|---|
 | 1 | Requirements | pending | [01-requirements.md](01-requirements.md) |
-| 2 | Design | pending | [02-design.md](02-design.md) |
-| 3 | Development | pending | [03-development.md](03-development.md) |
+| 2 | Design (arc42 + C4) | pending | [02-design.md](02-design.md) |
+| 2.5 | Func-to-Tech Mapping | pending | [02b-mapping.md](02b-mapping.md) |
+| 3 | Development + Backlog | pending | [03-development.md](03-development.md) |
 | 4 | Testing | pending | [04-testing.md](04-testing.md) |
 | 5 | Security | pending | [05-security.md](05-security.md) |
 | 6 | Deployment | pending | [06-deployment.md](06-deployment.md) |
